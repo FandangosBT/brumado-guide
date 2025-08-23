@@ -2,41 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Sistema Visual Interativo - Design System */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Base Colors */
+    --background: 240 10% 4%;
+    --foreground: 240 5% 96%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Card System */
+    --card: 240 8% 8%;
+    --card-foreground: 240 5% 96%;
+    --card-hover: 240 8% 12%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Interactive Elements */
+    --popover: 240 8% 8%;
+    --popover-foreground: 240 5% 96%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Brand Colors - Progressive Steps */
+    --step-1: 280 100% 70%; /* Purple - ESCUTAR */
+    --step-2: 220 100% 70%; /* Blue - PROCESSAR */
+    --step-3: 45 100% 60%;  /* Yellow - IDENTIFICAR */
+    --step-4: 25 100% 60%;  /* Orange - CRIAR */
+    --step-5: 0 100% 65%;   /* Red - OTIMIZAR */
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Primary Brand */
+    --primary: 280 100% 70%;
+    --primary-foreground: 240 10% 4%;
+    --primary-glow: 280 100% 80%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Interactive States */
+    --secondary: 240 8% 12%;
+    --secondary-foreground: 240 5% 96%;
+    --secondary-hover: 240 8% 16%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 240 8% 16%;
+    --muted-foreground: 240 5% 65%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --accent: 240 8% 12%;
+    --accent-foreground: 240 5% 96%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* System Colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 240 5% 96%;
 
-    --radius: 0.5rem;
+    --border: 240 8% 16%;
+    --input: 240 8% 12%;
+    --ring: 280 100% 70%;
+
+    --radius: 1rem;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--step-1)), hsl(var(--step-2)));
+    --gradient-card: linear-gradient(135deg, hsl(var(--card)), hsl(var(--card-hover)));
+    --gradient-step-1: linear-gradient(135deg, hsl(var(--step-1) / 0.1), hsl(var(--step-1) / 0.05));
+    --gradient-step-2: linear-gradient(135deg, hsl(var(--step-2) / 0.1), hsl(var(--step-2) / 0.05));
+    --gradient-step-3: linear-gradient(135deg, hsl(var(--step-3) / 0.1), hsl(var(--step-3) / 0.05));
+    --gradient-step-4: linear-gradient(135deg, hsl(var(--step-4) / 0.1), hsl(var(--step-4) / 0.05));
+    --gradient-step-5: linear-gradient(135deg, hsl(var(--step-5) / 0.1), hsl(var(--step-5) / 0.05));
+
+    /* Shadows */
+    --shadow-elegant: 0 20px 40px -10px hsl(var(--primary) / 0.1);
+    --shadow-card: 0 10px 30px -5px hsl(240 10% 4% / 0.3);
+    --shadow-glow: 0 0 60px hsl(var(--primary-glow) / 0.3);
+
+    /* Animation Variables */
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -101,5 +133,73 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* Interactive Cards */
+  .interactive-card {
+    @apply bg-gradient-to-br from-card to-card-hover border border-border rounded-2xl p-6 transition-all duration-500 hover:shadow-[var(--shadow-card)] hover:scale-[1.02] cursor-pointer;
+  }
+
+  .step-card {
+    @apply interactive-card backdrop-blur-sm;
+  }
+
+  .step-card.step-1 { @apply bg-[var(--gradient-step-1)] border-step-1/20 hover:shadow-step-1/20; }
+  .step-card.step-2 { @apply bg-[var(--gradient-step-2)] border-step-2/20 hover:shadow-step-2/20; }
+  .step-card.step-3 { @apply bg-[var(--gradient-step-3)] border-step-3/20 hover:shadow-step-3/20; }
+  .step-card.step-4 { @apply bg-[var(--gradient-step-4)] border-step-4/20 hover:shadow-step-4/20; }
+  .step-card.step-5 { @apply bg-[var(--gradient-step-5)] border-step-5/20 hover:shadow-step-5/20; }
+
+  /* Navigation */
+  .step-nav {
+    @apply fixed top-8 left-1/2 transform -translate-x-1/2 z-50 bg-card/80 backdrop-blur-md border border-border rounded-full px-6 py-3;
+  }
+
+  /* Progress Indicators */
+  .progress-dot {
+    @apply w-3 h-3 rounded-full transition-all duration-300;
+  }
+
+  .progress-dot.active {
+    @apply scale-125 shadow-[var(--shadow-glow)];
+  }
+
+  /* Flip Cards */
+  .flip-card {
+    @apply relative w-full h-64 [perspective:1000px];
+  }
+
+  .flip-card-inner {
+    @apply relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d];
+  }
+
+  .flip-card.flipped .flip-card-inner {
+    @apply [transform:rotateY(180deg)];
+  }
+
+  .flip-card-front, .flip-card-back {
+    @apply absolute w-full h-full [backface-visibility:hidden] rounded-2xl;
+  }
+
+  .flip-card-back {
+    @apply [transform:rotateY(180deg)];
+  }
+
+  /* Glowing Effects */
+  .glow-effect {
+    @apply relative;
+  }
+
+  .glow-effect::before {
+    @apply content-[''] absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 pointer-events-none;
+    background: var(--gradient-hero);
+    filter: blur(20px);
+    z-index: -1;
+  }
+
+  .glow-effect:hover::before {
+    @apply opacity-20;
   }
 }
