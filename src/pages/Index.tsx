@@ -5,6 +5,8 @@ import { Step2Processar } from "@/components/steps/Step2Processar";
 import { Step3Identificar } from "@/components/steps/Step3Identificar";
 import { Step4Criar } from "@/components/steps/Step4Criar";
 import { Step5Otimizar } from "@/components/steps/Step5Otimizar";
+import { ROICalculator } from "@/components/ROICalculator";
+import { MeetingScheduler } from "@/components/MeetingScheduler";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { MessageSquare, Phone } from "lucide-react";
@@ -114,6 +116,19 @@ const Index = () => {
       {currentStep === 2 && <Step3Identificar onNext={nextStep} />}
       {currentStep === 3 && <Step4Criar onNext={nextStep} />}
       {currentStep === 4 && <Step5Otimizar onComplete={completeJourney} />}
+      
+      {/* Interactive Tools */}
+      <section id="roi-calculator" className="py-20 bg-muted/10">
+        <div className="container mx-auto px-6">
+          <ROICalculator />
+        </div>
+      </section>
+      
+      <section id="meeting-scheduler" className="py-20">
+        <div className="container mx-auto px-6">
+          <MeetingScheduler />
+        </div>
+      </section>
     </main>
   );
 };

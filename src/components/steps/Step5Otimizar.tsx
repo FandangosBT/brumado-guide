@@ -248,6 +248,46 @@ export const Step5Otimizar = ({ onComplete }: Step5OtimizarProps) => {
           </div>
         </div>
 
+        {/* Calculadora ROI e Agendamento */}
+        <div className="mb-16">
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold mb-4">Ferramentas Interativas</h3>
+            <p className="text-muted-foreground">
+              Calcule seu ROI personalizado e agende uma conversa estratégica
+            </p>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-step-3 text-step-3 hover:bg-step-3/10 px-6 py-3 transition-all duration-300 hover:scale-105"
+              onClick={() => {
+                const roiSection = document.getElementById('roi-calculator');
+                if (roiSection) {
+                  roiSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+            >
+              Calcular Meu ROI
+            </Button>
+            
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-step-4 text-step-4 hover:bg-step-4/10 px-6 py-3 transition-all duration-300 hover:scale-105"
+              onClick={() => {
+                const meetingSection = document.getElementById('meeting-scheduler');
+                if (meetingSection) {
+                  meetingSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+            >
+              Agendar Reunião
+            </Button>
+          </div>
+        </div>
+
         {/* CTA Final */}
         <div className="text-center animate-slide-up">
           <p className="text-xl text-muted-foreground mb-8">
@@ -274,7 +314,7 @@ export const Step5Otimizar = ({ onComplete }: Step5OtimizarProps) => {
               className="bg-gradient-hero hover:opacity-90 text-primary-foreground font-semibold px-8 py-3 text-lg glow-effect transition-all duration-300 hover:scale-105"
               aria-label="Agendar conversa estratégica para implementar soluções"
             >
-              Agendar Conversa Estratégica
+              Finalizar Jornada
             </Button>
             <Button 
               variant="outline"
