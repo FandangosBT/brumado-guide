@@ -255,16 +255,40 @@ export const Step5Otimizar = ({ onComplete }: Step5OtimizarProps) => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
-              onClick={onComplete}
+              onClick={() => {
+                // Zoom out animation before completing
+                const element = document.querySelector('section');
+                if (element) {
+                  element.style.transform = 'scale(0.8)';
+                  element.style.opacity = '0.8';
+                  element.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                  
+                  setTimeout(() => {
+                    onComplete();
+                  }, 800);
+                } else {
+                  onComplete();
+                }
+              }}
               size="lg"
-              className="bg-gradient-hero hover:opacity-90 text-primary-foreground font-semibold px-8 py-3 text-lg glow-effect"
+              className="bg-gradient-hero hover:opacity-90 text-primary-foreground font-semibold px-8 py-3 text-lg glow-effect transition-all duration-300 hover:scale-105"
+              aria-label="Agendar conversa estratégica para implementar soluções"
             >
               Agendar Conversa Estratégica
             </Button>
             <Button 
               variant="outline"
               size="lg"
-              className="border-step-5 text-step-5 hover:bg-step-5/10 px-8 py-3 text-lg"
+              className="border-step-5 text-step-5 hover:bg-step-5/10 px-8 py-3 text-lg transition-all duration-300 hover:scale-105"
+              onClick={async () => {
+                try {
+                  const { generateJourneyPDF } = await import('@/utils/pdf-generator');
+                  await generateJourneyPDF();
+                } catch (error) {
+                  console.error('Erro ao gerar PDF:', error);
+                }
+              }}
+              aria-label="Baixar resumo completo da jornada em PDF"
             >
               Baixar Resumo PDF
             </Button>

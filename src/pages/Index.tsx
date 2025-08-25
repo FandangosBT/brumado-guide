@@ -6,6 +6,7 @@ import { Step3Identificar } from "@/components/steps/Step3Identificar";
 import { Step4Criar } from "@/components/steps/Step4Criar";
 import { Step5Otimizar } from "@/components/steps/Step5Otimizar";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { MessageSquare, Phone } from "lucide-react";
 
 const Index = () => {
@@ -54,8 +55,9 @@ const Index = () => {
           <div className="space-y-4">
             <Button
               size="lg"
-              className="w-full sm:w-auto bg-gradient-hero hover:opacity-90 text-primary-foreground font-semibold px-8 py-4 text-lg glow-effect"
+              className="w-full sm:w-auto bg-gradient-hero hover:opacity-90 text-primary-foreground font-semibold px-8 py-4 text-lg glow-effect transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-primary focus:ring-offset-2"
               onClick={() => window.open('tel:+5511999999999', '_blank')}
+              aria-label="Ligar para agendar conversa estratégica"
             >
               <Phone className="w-5 h-5 mr-2" />
               Agendar Conversa (11) 99999-9999
@@ -66,7 +68,8 @@ const Index = () => {
             <Button
               variant="outline"
               onClick={() => setIsComplete(false)}
-              className="text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              aria-label="Revisar jornada completa novamente"
             >
               Revisar a Jornada
             </Button>
@@ -87,12 +90,18 @@ const Index = () => {
         canGoNext={true}
       />
 
+      {/* Theme Toggle */}
+      <div className="fixed top-8 right-8 z-40 animate-fade-in">
+        <ThemeToggle />
+      </div>
+
       {/* Floating Contact */}
       <div className="fixed bottom-8 right-8 z-40 animate-fade-in">
         <Button
           size="sm"
-          className="bg-gradient-hero hover:opacity-90 text-primary-foreground shadow-elegant rounded-full px-4 py-2"
+          className="bg-gradient-hero hover:opacity-90 text-primary-foreground shadow-elegant rounded-full px-4 py-2 transition-all duration-300 hover:scale-105"
           onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Vi a proposta consultiva e gostaria de conversar sobre transformação digital para minha clínica.', '_blank')}
+          aria-label="Entrar em contato via WhatsApp"
         >
           <MessageSquare className="w-4 h-4 mr-2" />
           WhatsApp

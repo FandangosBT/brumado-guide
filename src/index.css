@@ -71,19 +71,47 @@
     --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
 
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --card-hover: 240 5% 96%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 280 100% 70%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 280 100% 70%;
+    --radius: 1rem;
+    --gradient-hero: linear-gradient(135deg, hsl(var(--step-1)), hsl(var(--step-2)));
+    --shadow-elegant: 0 20px 40px -10px hsl(var(--primary) / 0.15);
+    --shadow-card: 0 10px 30px -5px hsl(240 10% 3.9% / 0.1);
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -139,7 +167,7 @@
 @layer components {
   /* Interactive Cards */
   .interactive-card {
-    @apply bg-gradient-to-br from-card to-card-hover border border-border rounded-2xl p-6 transition-all duration-500 hover:shadow-[var(--shadow-card)] hover:scale-[1.02] cursor-pointer;
+    @apply bg-gradient-to-br from-card to-card-hover border border-border rounded-2xl p-6 transition-all duration-500 hover:shadow-[var(--shadow-card)] hover:scale-[1.02] cursor-pointer focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2;
   }
 
   .step-card {

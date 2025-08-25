@@ -10,7 +10,13 @@ const problemas = [
     problema: "Retrabalho Constante",
     impacto: "+12h/mês perdidas",
     posicao: { top: "20%", left: "15%" },
-    detalhes: "Reagendamentos, confirmações manuais, busca por informações dispersas"
+    detalhes: "Reagendamentos, confirmações manuais, busca por informações dispersas",
+    metricas: {
+      tempoMedio: "45 min/reagendamento",
+      frequencia: "18 vezes/mês",
+      custoOportunidade: "R$ 2.340"
+    },
+    solucaoProposta: "Automação de agenda com IA preditiva"
   },
   {
     id: "receita",
@@ -19,7 +25,13 @@ const problemas = [
     problema: "Receita Limitada",
     impacto: "30% abaixo do potencial",
     posicao: { top: "30%", left: "70%" },
-    detalhes: "Pacientes inativos, falta de follow-up, oportunidades perdidas"
+    detalhes: "Pacientes inativos, falta de follow-up, oportunidades perdidas",
+    metricas: {
+      pacientesInativos: "1.247 pacientes",
+      ticketMedio: "R$ 185",
+      potencialMensal: "R$ 68.495"
+    },
+    solucaoProposta: "CRM inteligente com campanhas automatizadas"
   },
   {
     id: "equipe",
@@ -28,7 +40,13 @@ const problemas = [
     problema: "Equipe Sobrecarregada",
     impacto: "40% do tempo em tarefas manuais",
     posicao: { top: "60%", left: "25%" },
-    detalhes: "Secretárias fazendo controle manual, médicos perdendo tempo com burocracia"
+    detalhes: "Secretárias fazendo controle manual, médicos perdendo tempo com burocracia",
+    metricas: {
+      horasSemanais: "16h em tarefas repetitivas",
+      custoHora: "R$ 35",
+      desperdicio: "R$ 2.240/mês"
+    },
+    solucaoProposta: "Workflows automatizados e dashboards unificados"
   },
   {
     id: "pacientes",
@@ -37,7 +55,13 @@ const problemas = [
     problema: "Pacientes Desengajados",
     impacto: "50% de taxa de abandono",
     posicao: { top: "70%", left: "65%" },
-    detalhes: "Sem comunicação proativa, experiência fragmentada, baixa fidelização"
+    detalhes: "Sem comunicação proativa, experiência fragmentada, baixa fidelização",
+    metricas: {
+      nps: "3.2/10",
+      retorno: "35% taxa de retorno",
+      churn: "50% abandono/ano"
+    },
+    solucaoProposta: "Jornada do paciente digitalizada com comunicação 360°"
   },
   {
     id: "desperdicio",
@@ -46,7 +70,13 @@ const problemas = [
     problema: "Desperdício de Recursos",
     impacto: "R$ 2.500/mês em perdas",
     posicao: { top: "45%", left: "45%" },
-    detalhes: "Medicamentos vencidos, compras desnecessárias, falta de controle"
+    detalhes: "Medicamentos vencidos, compras desnecessárias, falta de controle",
+    metricas: {
+      itensVencidos: "12% do estoque/mês",
+      comprasDesnecessarias: "R$ 1.850/mês",
+      faltaControle: "85% sem tracking"
+    },
+    solucaoProposta: "Sistema inteligente de gestão de estoque com alertas"
   }
 ];
 
@@ -111,25 +141,47 @@ export const Step2Processar = ({ onNext }: Step2ProcessarProps) => {
                     <div className="absolute inset-0 rounded-full bg-step-2 animate-ping opacity-75" />
                   </div>
 
-                  {/* Tooltip */}
+                   {/* Rich Tooltip */}
                   {isActive && (
-                    <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-80 z-20 animate-scale-in">
-                      <div className="bg-card border border-border rounded-xl p-4 shadow-elegant">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="p-2 bg-step-2/20 rounded-lg">
-                            <Icon className="w-5 h-5 text-step-2" />
+                    <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-96 z-20 animate-scale-in">
+                      <div className="bg-card/95 backdrop-blur-md border border-border rounded-xl p-6 shadow-elegant">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-3 bg-step-2/20 rounded-lg">
+                            <Icon className="w-6 h-6 text-step-2" />
                           </div>
                           <div>
-                            <div className="font-semibold">{problema.problema}</div>
+                            <div className="font-bold text-lg">{problema.problema}</div>
                             <div className="text-sm text-step-2 font-medium">{problema.area}</div>
                           </div>
                         </div>
-                        <div className="text-sm text-muted-foreground mb-2">
+                        
+                        <div className="text-sm text-muted-foreground mb-4">
                           {problema.detalhes}
                         </div>
-                        <div className="bg-step-2/10 rounded-lg p-2">
-                          <div className="text-xs font-medium text-step-2">
-                            {problema.impacto}
+
+                        {/* Métricas Detalhadas */}
+                        <div className="space-y-3 mb-4">
+                          {Object.entries(problema.metricas).map(([key, value]) => (
+                            <div key={key} className="flex justify-between items-center py-2 px-3 bg-step-2/5 rounded-lg">
+                              <span className="text-xs font-medium text-muted-foreground capitalize">
+                                {key.replace(/([A-Z])/g, ' $1').toLowerCase()}
+                              </span>
+                              <span className="text-sm font-semibold text-step-2">{value}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Solução Proposta */}
+                        <div className="bg-gradient-to-r from-step-2/10 to-step-3/10 rounded-lg p-3 border border-step-2/20">
+                          <div className="text-xs font-medium text-step-2 mb-1">SOLUÇÃO TIMEOS</div>
+                          <div className="text-sm font-medium text-foreground">{problema.solucaoProposta}</div>
+                        </div>
+
+                        {/* Impact Badge */}
+                        <div className="mt-4 text-center">
+                          <div className="inline-flex items-center gap-2 px-3 py-1 bg-step-2/20 rounded-full">
+                            <AlertCircle className="w-3 h-3 text-step-2" />
+                            <span className="text-xs font-medium text-step-2">{problema.impacto}</span>
                           </div>
                         </div>
                       </div>
@@ -196,7 +248,8 @@ export const Step2Processar = ({ onNext }: Step2ProcessarProps) => {
           <Button 
             onClick={onNext}
             size="lg"
-            className="bg-step-2 hover:bg-step-2/90 text-primary-foreground font-semibold px-8 py-3 text-lg glow-effect"
+            className="bg-step-2 hover:bg-step-2/90 text-primary-foreground font-semibold px-8 py-3 text-lg glow-effect transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-step-2 focus:ring-offset-2"
+            aria-label="Identificar soluções para os problemas mapeados"
           >
             Vamos identificar as soluções
           </Button>

@@ -25,32 +25,34 @@ export const StepNavigation = ({
   canGoNext = true 
 }: StepNavigationProps) => {
   return (
-    <nav className="step-nav" aria-label="Navegação entre etapas">
+    <nav className="step-nav" aria-label="Navegação entre etapas" role="navigation">
       <div className="flex items-center gap-6">
         <Button
           variant="ghost"
           size="sm"
           onClick={onPrevious}
           disabled={currentStep === 0}
-          className="text-muted-foreground hover:text-foreground"
-          aria-label="Etapa anterior"
+          className="text-muted-foreground hover:text-foreground transition-all duration-300 hover:scale-105 disabled:hover:scale-100 focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          aria-label="Voltar para etapa anterior"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
           Voltar
         </Button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" role="progressbar" aria-valuenow={currentStep + 1} aria-valuemin={1} aria-valuemax={totalSteps}>
           {Array.from({ length: totalSteps }, (_, i) => (
             <div
               key={i}
-              className={`progress-dot ${
+              className={`progress-dot transition-all duration-300 ${
                 i === currentStep 
-                  ? `active ${stepColors[i]}` 
+                  ? `active ${stepColors[i]} animate-glow-pulse` 
                   : i < currentStep 
-                    ? "bg-muted-foreground" 
-                    : "bg-muted"
+                    ? "bg-muted-foreground scale-90" 
+                    : "bg-muted scale-75"
               }`}
-              aria-label={`Etapa ${i + 1}${i === currentStep ? ' - atual' : ''}`}
+              aria-label={`Etapa ${i + 1}${i === currentStep ? ' - atual' : i < currentStep ? ' - concluída' : ' - pendente'}`}
+              role="button"
+              tabIndex={0}
             />
           ))}
         </div>
@@ -60,15 +62,15 @@ export const StepNavigation = ({
           size="sm"
           onClick={onNext}
           disabled={currentStep === totalSteps - 1 || !canGoNext}
-          className="text-muted-foreground hover:text-foreground"
-          aria-label="Próxima etapa"
+          className="text-muted-foreground hover:text-foreground transition-all duration-300 hover:scale-105 disabled:hover:scale-100 focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          aria-label="Avançar para próxima etapa"
         >
           Avançar
           <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
       </div>
 
-      <div className="text-xs text-muted-foreground mt-2 text-center">
+      <div className="text-xs text-muted-foreground mt-2 text-center" aria-live="polite">
         Etapa {currentStep + 1} de {totalSteps}
       </div>
     </nav>
