@@ -1,7 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/((?!api|_next|_static|favicon.ico|robots.txt|sitemap.xml|assets|.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|webp|mp4|pdf)).*)",
       "destination": "/index.html"
     }
   ],
@@ -20,6 +24,10 @@
         {
           "key": "X-XSS-Protection",
           "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
         }
       ]
     },
