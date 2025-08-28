@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { trackEvent } from '@/lib/sdk';
 
 export interface JorneyData {
   step1: {
@@ -28,7 +29,15 @@ export interface JorneyData {
   };
 }
 
-export const generateJourneyPDF = async (): Promise<void> => {
+export const generateJourneyPDF = async (sessionId?: string): Promise<void> => {
+  const startTs = Date.now();
+  const sectionsIncluded = ['Escutar', 'Processar', 'Identificar', 'Criar', 'Otimizar'];
+  if (sessionId) {
+    try {
+      await trackEvent({ sessionId, step: 'Otimizar', action: 'pdf_generate_start', metadata: { sections: sectionsIncluded }, ts: startTs } as any);
+    } catch {}
+  }
+
   try {
     const pdf = new jsPDF('p', 'mm', 'a4');
     const pageWidth = pdf.internal.pageSize.getWidth();
@@ -187,13 +196,34 @@ export const generateJourneyPDF = async (): Promise<void> => {
 
     // Save the PDF
     pdf.save('jornada-transformacao-digital.pdf');
+
+    const endTs = Date.now();
+    const pages = (pdf as any)?.getNumberOfPages ? (pdf as any).getNumberOfPages() : 1;
+    if (sessionId) {
+      try {
+        await trackEvent({ sessionId, step: 'Otimizar', action: 'pdf_generate_success', metadata: { durationMs: endTs - startTs, pages, sections: sectionsIncluded }, ts: endTs } as any);
+      } catch {}
+    }
   } catch (error) {
+    const endTs = Date.now();
+    if (sessionId) {
+      try {
+        await trackEvent({ sessionId, step: 'Otimizar', action: 'pdf_generate_error', metadata: { message: (error as Error)?.message, sections: sectionsIncluded }, ts: endTs } as any);
+      } catch {}
+    }
     console.error('Erro ao gerar PDF:', error);
     throw new Error('Falha ao gerar o arquivo PDF');
   }
 };
 
-export const generateScreenshotPDF = async (elementId: string): Promise<void> => {
+export const generateScreenshotPDF = async (elementId: string, sessionId?: string): Promise<void> => {
+  const startTs = Date.now();
+  if (sessionId) {
+    try {
+      await trackEvent({ sessionId, step: 'Otimizar', action: 'pdf_screenshot_start', metadata: { selector: elementId }, ts: startTs } as any);
+    } catch {}
+  }
+
   try {
     const element = document.getElementById(elementId);
     if (!element) {
@@ -226,9 +256,23 @@ export const generateScreenshotPDF = async (elementId: string): Promise<void> =>
       heightLeft -= pageHeight;
     }
 
-    pdf.save('dashboard-timeos.pdf');
+    pdf.save('resumo-cockpit.pdf');
+
+    const endTs = Date.now();
+    const pages = (pdf as any)?.getNumberOfPages ? (pdf as any).getNumberOfPages() : 1;
+    if (sessionId) {
+      try {
+        await trackEvent({ sessionId, step: 'Otimizar', action: 'pdf_screenshot_success', metadata: { durationMs: endTs - startTs, selector: elementId, pages }, ts: endTs } as any);
+      } catch {}
+    }
   } catch (error) {
-    console.error('Erro ao gerar screenshot PDF:', error);
-    throw new Error('Falha ao gerar o screenshot PDF');
+    const endTs = Date.now();
+    if (sessionId) {
+      try {
+        await trackEvent({ sessionId, step: 'Otimizar', action: 'pdf_screenshot_error', metadata: { message: (error as Error)?.message, selector: elementId }, ts: endTs } as any);
+      } catch {}
+    }
+    console.error('Erro ao gerar PDF:', error);
+    throw new Error('Falha ao gerar o arquivo PDF');
   }
 };

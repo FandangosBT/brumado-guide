@@ -1,255 +1,304 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, Clock, DollarSign, Users, TrendingDown } from "lucide-react";
-
-const problemas = [
-  {
-    id: "retrabalho",
-    icon: Clock,
-    area: "Operacional",
-    problema: "Retrabalho Constante",
-    impacto: "+12h/mês perdidas",
-    posicao: { top: "20%", left: "15%" },
-    detalhes: "Reagendamentos, confirmações manuais, busca por informações dispersas",
-    metricas: {
-      tempoMedio: "45 min/reagendamento",
-      frequencia: "18 vezes/mês",
-      custoOportunidade: "R$ 2.340"
-    },
-    solucaoProposta: "Automação de agenda com IA preditiva"
-  },
-  {
-    id: "receita",
-    icon: DollarSign,
-    area: "Financeiro",
-    problema: "Receita Limitada",
-    impacto: "30% abaixo do potencial",
-    posicao: { top: "30%", left: "70%" },
-    detalhes: "Pacientes inativos, falta de follow-up, oportunidades perdidas",
-    metricas: {
-      pacientesInativos: "1.247 pacientes",
-      ticketMedio: "R$ 185",
-      potencialMensal: "R$ 68.495"
-    },
-    solucaoProposta: "CRM inteligente com campanhas automatizadas"
-  },
-  {
-    id: "equipe",
-    icon: Users,
-    area: "Recursos Humanos",
-    problema: "Equipe Sobrecarregada",
-    impacto: "40% do tempo em tarefas manuais",
-    posicao: { top: "60%", left: "25%" },
-    detalhes: "Secretárias fazendo controle manual, médicos perdendo tempo com burocracia",
-    metricas: {
-      horasSemanais: "16h em tarefas repetitivas",
-      custoHora: "R$ 35",
-      desperdicio: "R$ 2.240/mês"
-    },
-    solucaoProposta: "Workflows automatizados e dashboards unificados"
-  },
-  {
-    id: "pacientes",
-    icon: TrendingDown,
-    area: "Relacionamento",
-    problema: "Pacientes Desengajados",
-    impacto: "50% de taxa de abandono",
-    posicao: { top: "70%", left: "65%" },
-    detalhes: "Sem comunicação proativa, experiência fragmentada, baixa fidelização",
-    metricas: {
-      nps: "3.2/10",
-      retorno: "35% taxa de retorno",
-      churn: "50% abandono/ano"
-    },
-    solucaoProposta: "Jornada do paciente digitalizada com comunicação 360°"
-  },
-  {
-    id: "desperdicio",
-    icon: AlertCircle,
-    area: "Estoque",
-    problema: "Desperdício de Recursos",
-    impacto: "R$ 2.500/mês em perdas",
-    posicao: { top: "45%", left: "45%" },
-    detalhes: "Medicamentos vencidos, compras desnecessárias, falta de controle",
-    metricas: {
-      itensVencidos: "12% do estoque/mês",
-      comprasDesnecessarias: "R$ 1.850/mês",
-      faltaControle: "85% sem tracking"
-    },
-    solucaoProposta: "Sistema inteligente de gestão de estoque com alertas"
-  }
-];
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { FileText, CalendarDays, FileSignature, Package, MessageSquare, Megaphone, AlertTriangle, Link2 } from "lucide-react";
+import { generateScreenshotPDF } from "@/utils/pdf-generator";
+import { trackHover, trackClick, trackStepComplete, trackCtaClick } from "@/lib/sdk";
 
 interface Step2ProcessarProps {
   onNext: () => void;
+  sessionId?: string;
 }
 
-export const Step2Processar = ({ onNext }: Step2ProcessarProps) => {
-  const [activeProblema, setActiveProblema] = useState<string | null>(null);
+const META = {
+  lead: "Dra. Giovana – Clínica Odontológica",
+  data: "Agosto/2025",
+  consultoria: "Q7 Ops",
+};
+
+type CategoryId = "agenda" | "contratos" | "estoque" | "comunicacao" | "marketing";
+
+const CATEGORIES: Array<{
+  id: CategoryId;
+  icon: typeof CalendarDays;
+  title: string;
+  bullets: string[];
+  impacto: string;
+  impactoScore: number; // 0-100
+  esforcoScore: number; // 0-100 (quanto menor, melhor)
+}> = [
+  {
+    id: "agenda",
+    icon: CalendarDays,
+    title: "Agenda e Atendimento",
+    bullets: [
+      "Agendas descentralizadas por secretária → risco de duplicidade",
+      "Ausência de lembretes automáticos",
+      "Sem recuperação de pacientes inativos",
+    ],
+    impacto: "Perda de pacientes, tempo em remarcações e desgaste de imagem",
+    impactoScore: 90,
+    esforcoScore: 35,
+  },
+  {
+    id: "contratos",
+    icon: FileSignature,
+    title: "Contratos e Documentos",
+    bullets: [
+      "Preenchimento manual de dados",
+      "Retrabalho e risco de erro",
+      "Assinatura presencial",
+    ],
+    impacto: "Tempo desperdiçado e lentidão no fechamento de tratamentos",
+    impactoScore: 75,
+    esforcoScore: 40,
+  },
+  {
+    id: "estoque",
+    icon: Package,
+    title: "Estoque e Insumos",
+    bullets: [
+      "Controle em Excel sem alertas",
+      "Risco de ruptura",
+      "Compras emergenciais",
+    ],
+    impacto: "Interrupções no atendimento, custos maiores e perda de confiança",
+    impactoScore: 65,
+    esforcoScore: 55,
+  },
+  {
+    id: "comunicacao",
+    icon: MessageSquare,
+    title: "Comunicação e Orçamentos",
+    bullets: [
+      "Orçamentos em PDF por WhatsApp (sem histórico)",
+      "Follow-up improvisado (retorno em 2 dias)",
+      "Sem CRM ativo",
+    ],
+    impacto: "Orçamentos esquecidos, perda de receita recorrente e decisões sem dados",
+    impactoScore: 80,
+    esforcoScore: 45,
+  },
+  {
+    id: "marketing",
+    icon: Megaphone,
+    title: "Marketing e Digital",
+    bullets: [
+      "Gestão pessoal das redes pela doutora",
+      "Consultoria externa limitada à macro",
+      "Presença digital inconsistente",
+    ],
+    impacto: "Baixa previsibilidade de atração de pacientes e desgaste emocional",
+    impactoScore: 60,
+    esforcoScore: 60,
+  },
+];
+
+// Conexões entre categorias correlatas
+const RELATED: Record<CategoryId, CategoryId[]> = {
+  agenda: ["comunicacao", "contratos"],
+  contratos: ["agenda", "comunicacao"],
+  estoque: ["agenda"],
+  comunicacao: ["agenda", "marketing", "contratos"],
+  marketing: ["comunicacao"],
+};
+
+export const Step2Processar = ({ onNext, sessionId }: Step2ProcessarProps) => {
+  const hoveredRef = useRef<Record<string, number>>({});
+  const [active, setActive] = useState<CategoryId | null>(null);
+
+  const onCardEnter = (id: CategoryId) => {
+    setActive(id);
+    if (sessionId) trackHover(sessionId, "Processar", id);
+    hoveredRef.current[id] = (hoveredRef.current[id] || 0) + 1;
+  };
+
+  const onCardLeave = () => setActive(null);
+
+  const onCardClick = (id: CategoryId) => {
+    if (sessionId) trackClick(sessionId, "Processar", id);
+  };
+
+  const handleGeneratePdf = () => {
+    if (sessionId) {
+      trackCtaClick(sessionId, "gargalos_pdf_download", { step: "Processar" });
+    }
+    // Criar link para download do arquivo PDF
+    const link = document.createElement('a');
+    link.href = '/Mapa-de-Gargalos-Invisiveis-Clinica-Dra-Giovana.pdf';
+    link.download = 'Mapa-de-Gargalos-Invisiveis-Clinica-Dra-Giovana.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleNext = () => {
+    if (sessionId) {
+      const hovered = Object.keys(hoveredRef.current);
+      trackStepComplete(sessionId, "Processar", { hovered });
+    }
+    onNext();
+  };
+
+  const isConnected = (id: CategoryId) => {
+    if (!active) return false;
+    return active === id || (RELATED[active] || []).includes(id);
+  };
 
   return (
     <section className="min-h-screen flex flex-col justify-center py-20">
       <div className="container mx-auto px-6">
         {/* Header */}
-        <header className="text-center mb-16 animate-fade-in">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-step-2 rounded-full text-step-2 font-medium mb-6">
+        <header className="text-center mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-step-2 rounded-full text-step-2 font-medium mb-4">
             🔵 ETAPA 2
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-step-2 to-step-3 bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-step-2 to-step-3 bg-clip-text text-transparent">
             PROCESSAR
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Onde o sistema está perdendo força? Vamos mapear os gargalos ocultos que drenam recursos.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Mapa de Gargalos Invisíveis — onde a operação perde eficiência sem você perceber.
           </p>
         </header>
 
-        {/* Mapa de Calor Interativo */}
-        <div className="max-w-6xl mx-auto mb-12">
-          <div className="relative bg-gradient-to-br from-card to-card-hover rounded-3xl p-8 border border-border min-h-[500px] overflow-hidden">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-5">
-              <div className="grid grid-cols-12 grid-rows-8 h-full w-full">
-                {Array.from({ length: 96 }, (_, i) => (
-                  <div key={i} className="border border-step-2/20" />
-                ))}
-              </div>
-            </div>
-
-            {/* Título do Mapa */}
-            <div className="text-center mb-8 relative z-10">
-              <h2 className="text-2xl font-bold text-step-2 mb-2">Mapa de Gargalos</h2>
-              <p className="text-muted-foreground">Passe o cursor sobre os pontos críticos</p>
-            </div>
-
-            {/* Problemas Posicionados */}
-            {problemas.map((problema, index) => {
-              const Icon = problema.icon;
-              const isActive = activeProblema === problema.id;
-              
-              return (
-                <div
-                  key={problema.id}
-                  className="absolute animate-glow-pulse cursor-pointer group"
-                  style={problema.posicao}
-                  onMouseEnter={() => setActiveProblema(problema.id)}
-                  onMouseLeave={() => setActiveProblema(null)}
-                >
-                  {/* Ponto de Alerta */}
-                  <div className={`relative w-6 h-6 rounded-full bg-step-2 shadow-lg transition-all duration-300 group-hover:scale-150 ${
-                    isActive ? 'animate-glow-pulse scale-150' : ''
-                  }`}>
-                    <div className="absolute inset-0 rounded-full bg-step-2 animate-ping opacity-75" />
-                  </div>
-
-                   {/* Rich Tooltip */}
-                  {isActive && (
-                    <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-96 z-20 animate-scale-in">
-                      <div className="bg-card/95 backdrop-blur-md border border-border rounded-xl p-6 shadow-elegant">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="p-3 bg-step-2/20 rounded-lg">
-                            <Icon className="w-6 h-6 text-step-2" />
-                          </div>
-                          <div>
-                            <div className="font-bold text-lg">{problema.problema}</div>
-                            <div className="text-sm text-step-2 font-medium">{problema.area}</div>
-                          </div>
-                        </div>
-                        
-                        <div className="text-sm text-muted-foreground mb-4">
-                          {problema.detalhes}
-                        </div>
-
-                        {/* Métricas Detalhadas */}
-                        <div className="space-y-3 mb-4">
-                          {Object.entries(problema.metricas).map(([key, value]) => (
-                            <div key={key} className="flex justify-between items-center py-2 px-3 bg-step-2/5 rounded-lg">
-                              <span className="text-xs font-medium text-muted-foreground capitalize">
-                                {key.replace(/([A-Z])/g, ' $1').toLowerCase()}
-                              </span>
-                              <span className="text-sm font-semibold text-step-2">{value}</span>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Solução Proposta */}
-                        <div className="bg-gradient-to-r from-step-2/10 to-step-3/10 rounded-lg p-3 border border-step-2/20">
-                          <div className="text-xs font-medium text-step-2 mb-1">SOLUÇÃO TIMEOS</div>
-                          <div className="text-sm font-medium text-foreground">{problema.solucaoProposta}</div>
-                        </div>
-
-                        {/* Impact Badge */}
-                        <div className="mt-4 text-center">
-                          <div className="inline-flex items-center gap-2 px-3 py-1 bg-step-2/20 rounded-full">
-                            <AlertCircle className="w-3 h-3 text-step-2" />
-                            <span className="text-xs font-medium text-step-2">{problema.impacto}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-
-            {/* Linhas de Conexão (quando hover) */}
-            {activeProblema && (
-              <svg className="absolute inset-0 w-full h-full pointer-events-none animate-fade-in">
-                <defs>
-                  <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="hsl(var(--step-2))" stopOpacity="0.6" />
-                    <stop offset="100%" stopColor="hsl(var(--step-2))" stopOpacity="0.1" />
-                  </linearGradient>
-                </defs>
-                {problemas.map((problema, index) => {
-                  if (problema.id === activeProblema) return null;
-                  const activeItem = problemas.find(p => p.id === activeProblema);
-                  if (!activeItem) return null;
-                  
-                  return (
-                    <line
-                      key={`connection-${index}`}
-                      x1={activeItem.posicao.left}
-                      y1={activeItem.posicao.top}
-                      x2={problema.posicao.left}
-                      y2={problema.posicao.top}
-                      stroke="url(#connectionGradient)"
-                      strokeWidth="2"
-                      strokeDasharray="5,5"
-                      className="animate-fade-in"
-                    />
-                  );
-                })}
-              </svg>
-            )}
-          </div>
+        {/* Meta + Ações */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
+          <Badge variant="secondary" className="bg-step-2/10 text-step-2">Lead: {META.lead}</Badge>
+          <Badge variant="secondary" className="bg-step-2/10 text-step-2">Data: {META.data}</Badge>
+          <Badge variant="secondary" className="bg-step-2/10 text-step-2">Consultoria: {META.consultoria}</Badge>
+          <Button variant="outline" onClick={handleGeneratePdf} className="border-step-2 text-step-2">
+            <FileText className="w-4 h-4 mr-2" /> Gerar PDF do Mapa
+          </Button>
         </div>
 
-        {/* Estatísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
-          <div className="step-card step-2 text-center animate-slide-up">
-            <div className="text-3xl font-bold text-step-2 mb-2">40hrs</div>
-            <div className="text-sm text-muted-foreground">Perdidas mensalmente</div>
+        {/* Mapa */}
+        <div id="gargalos-mapa" className="relative max-w-6xl mx-auto">
+          {/* Matriz Impacto x Esforço */}
+          <div className="mb-6">
+            <Card className="step-card step-2">
+              <CardHeader>
+                <CardTitle className="text-lg">Matriz Impacto x Esforço</CardTitle>
+                <CardDescription>Priorize visualmente: alto impacto e baixo esforço primeiro</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="relative h-64 rounded-xl border border-border overflow-hidden bg-card/70">
+                  {/* Eixos */}
+                  <div className="absolute left-0 right-0 top-1/2 h-px bg-border" />
+                  <div className="absolute top-0 bottom-0 left-1/2 w-px bg-border" />
+                  {/* Labels dos eixos */}
+                  <div className="absolute left-2 top-2 text-[10px] text-muted-foreground">Impacto (↑ melhor)</div>
+                  <div className="absolute right-2 bottom-2 text-[10px] text-muted-foreground">Esforço (→ maior)</div>
+                  {/* Quadrantes */}
+                  <div className="absolute left-8 top-8 text-[10px] font-medium text-step-2 z-10">Ganhos Rápidos</div>
+                  <div className="absolute right-8 top-8 text-[10px] font-medium text-muted-foreground z-10">Projetos Estratégicos</div>
+                  <div className="absolute left-8 bottom-8 text-[10px] font-medium text-muted-foreground z-10">Baixa Prioridade</div>
+                  <div className="absolute right-8 bottom-8 text-[10px] font-medium text-muted-foreground z-10">Reavaliar</div>
+
+                  {/* Pontos */}
+                  {CATEGORIES.map((cat) => {
+                    const left = `${Math.min(95, Math.max(5, cat.esforcoScore))}%`;
+                    const top = `${Math.min(95, Math.max(5, 100 - cat.impactoScore))}%`;
+                    const connected = isConnected(cat.id);
+                    return (
+                      <button
+                        key={`pt-${cat.id}`}
+                        className={`absolute -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 px-2 py-1 rounded-full border text-[10px] transition-transform duration-fast ease-q7 ${
+                          connected ? "bg-step-2/20 border-step-2 text-step-2" : "bg-muted/50 border-border text-muted-foreground"
+                        }`}
+                        style={{ left, top }}
+                        onMouseEnter={() => onCardEnter(cat.id)}
+                        onMouseLeave={onCardLeave}
+                        onClick={() => onCardClick(cat.id)}
+                        aria-label={`Ponto da matriz: ${cat.title}`}
+                      >
+                        <span className={`inline-block w-2 h-2 rounded-full ${connected ? "bg-step-2" : "bg-muted-foreground/60"}`} />
+                        <span className="whitespace-nowrap">{cat.title}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
           </div>
-          <div className="step-card step-2 text-center animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            <div className="text-3xl font-bold text-step-2 mb-2">R$ 8.500</div>
-            <div className="text-sm text-muted-foreground">Potencial não realizado</div>
-          </div>
-          <div className="step-card step-2 text-center animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            <div className="text-3xl font-bold text-step-2 mb-2">65%</div>
-            <div className="text-sm text-muted-foreground">Ineficiência operacional</div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {CATEGORIES.map((cat, index) => {
+              const Icon = cat.icon;
+              const connected = isConnected(cat.id);
+              return (
+                <Card
+                  key={cat.id}
+                  className={`step-card step-2 animate-scale-in cursor-pointer transition-transform duration-base ease-q7 ${
+                    connected ? "ring-2 ring-step-2 shadow-elegant" : "hover:shadow-elegant"
+                  } ${active && !connected ? "opacity-80" : ""}`}
+                  style={{ animationDelay: `${index * 0.08}s` }}
+                  onMouseEnter={() => onCardEnter(cat.id)}
+                  onMouseLeave={onCardLeave}
+                  onClick={() => onCardClick(cat.id)}
+                  aria-label={`Gargalo: ${cat.title}`}
+                  role="button"
+                >
+                  <CardHeader>
+                    <div className="flex items-center gap-3">
+                      <div className="p-3 bg-step-2/15 rounded-xl">
+                        <Icon className="w-6 h-6 text-step-2" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-lg">{cat.title}</CardTitle>
+                        <CardDescription className="text-muted-foreground">Gargalos invisíveis</CardDescription>
+                      </div>
+                      {connected && active !== cat.id && (
+                        <div className="ml-auto inline-flex items-center gap-1 text-xs text-step-2">
+                          <Link2 className="w-3 h-3" /> Relacionado a {formatTitle(active!)}
+                        </div>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 mb-4">
+                      {cat.bullets.map((b, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <AlertTriangle className="w-4 h-4 text-step-2 mt-0.5" />
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Régua Impacto x Esforço */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <div className="text-xs font-medium text-muted-foreground mb-1">Impacto</div>
+                        <Progress value={cat.impactoScore} className="h-2" />
+                        <div className="text-[10px] text-muted-foreground mt-1">Alto é melhor</div>
+                      </div>
+                      <div>
+                        <div className="text-xs font-medium text-muted-foreground mb-1">Esforço</div>
+                        <Progress value={cat.esforcoScore} className="h-2 bg-muted [&>div]:bg-step-2/70" />
+                        <div className="text-[10px] text-muted-foreground mt-1">Baixo é melhor</div>
+                      </div>
+                    </div>
+
+                    {/* Impacto resumido */}
+                    <div className="p-3 rounded-lg bg-step-2/10 border border-step-2/20 mt-4">
+                      <div className="text-xs font-medium text-step-2 mb-1">Impacto</div>
+                      <div className="text-sm text-muted-foreground">{cat.impacto}</div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
 
         {/* CTA */}
-        <div className="text-center animate-slide-up">
-          <p className="text-muted-foreground mb-6">
-            Esses gargalos estão limitando o crescimento da sua clínica.
-          </p>
-          <Button 
-            onClick={onNext}
+        <div className="text-center mt-8">
+          <Button
+            onClick={handleNext}
             size="lg"
-            className="bg-step-2 hover:bg-step-2/90 text-primary-foreground font-semibold px-8 py-3 text-lg glow-effect transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-step-2 focus:ring-offset-2"
-            aria-label="Identificar soluções para os problemas mapeados"
+            className="bg-step-2 hover:bg-step-2/90 text-primary-foreground font-semibold px-8 py-3 text-lg glow-effect transition-transform duration-base ease-q7 hover:scale-105 focus:ring-2 focus:ring-step-2 focus:ring-offset-2"
+            aria-label="Identificar soluções para os gargalos mapeados"
           >
             Vamos identificar as soluções
           </Button>
@@ -258,3 +307,7 @@ export const Step2Processar = ({ onNext }: Step2ProcessarProps) => {
     </section>
   );
 };
+
+function formatTitle(id: CategoryId) {
+  return CATEGORIES.find((c) => c.id === id)?.title ?? id;
+}

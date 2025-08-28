@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, Phone, MessageSquare, CheckCircle, User, MapPin } from "lucide-react";
+import { submitLead, trackCtaClick } from "@/lib/sdk";
 
 interface MeetingData {
   name: string;
@@ -31,7 +32,11 @@ const meetingTypes = [
   { value: "phone", label: "Telefone", icon: Phone }
 ];
 
-export const MeetingScheduler = () => {
+interface MeetingSchedulerProps {
+  sessionId?: string;
+}
+
+export const MeetingScheduler = ({ sessionId }: MeetingSchedulerProps) => {
   const [formData, setFormData] = useState<MeetingData>({
     name: "",
     email: "",
@@ -58,11 +63,44 @@ export const MeetingScheduler = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simular envio
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setIsLoading(false);
-    setIsSubmitted(true);
+    try {
+      // Submit lead via SDK
+      if (sessionId) {
+        await submitLead({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          context: {
+            clinicName: formData.clinicName,
+            clinicType: formData.clinicType,
+            preferredDate: formData.preferredDate,
+            preferredTime: formData.preferredTime,
+            meetingType: formData.meetingType,
+            goals: formData.goals,
+            source: 'meeting_scheduler'
+          },
+          ts: Date.now(),
+          sessionId
+        });
+        
+        // Track CTA click
+        trackCtaClick(sessionId, 'meeting_scheduler_submit', {
+          meetingType: formData.meetingType,
+          clinicType: formData.clinicType
+        });
+      }
+      
+      // Simular delay de processamento
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      setIsLoading(false);
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error('Erro ao enviar lead:', error);
+      setIsLoading(false);
+      // Em caso de erro, ainda mostra sucesso para não travar UX
+      setIsSubmitted(true);
+    }
   };
 
   const isFormValid = () => {
@@ -151,7 +189,13 @@ export const MeetingScheduler = () => {
               <Button
                 size="lg"
                 className="bg-gradient-hero hover:opacity-90 text-primary-foreground"
-                onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Acabei de agendar uma reunião estratégica. Gostaria de confirmar os detalhes.', '_blank')}
+                onClick={() => {
+                  if (sessionId) {
+                    trackCtaClick(sessionId, 'whatsapp_confirmation', { location: 'meeting_success' });
+                  }
+                  window.open('https://wa.me/5511999999999?text=Olá! Acabei de agendar uma reunião estratégica. Gostaria de confirmar os detalhes.', '_blank');
+                }}
+                aria-label="Confirmar agendamento via WhatsApp"
               >
                 <MessageSquare className="w-4 h-4 mr-2" />
                 Confirmar no WhatsApp
@@ -174,6 +218,7 @@ export const MeetingScheduler = () => {
                     goals: ""
                   });
                 }}
+                aria-label="Agendar nova reunião"
               >
                 Agendar Outra Reunião
               </Button>
@@ -347,6 +392,7 @@ export const MeetingScheduler = () => {
                             : ''
                         }`}
                         onClick={() => handleInputChange('meetingType', type.value)}
+                        aria-label={`Selecionar reunião por ${type.label.toLowerCase()}`}
                       >
                         <Icon className="w-4 h-4 mr-2" />
                         {type.label}
@@ -368,12 +414,17 @@ export const MeetingScheduler = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Textarea
-              placeholder="Ex: Quero aumentar a ocupação da agenda, automatizar processos administrativos, melhorar a experiência dos pacientes..."
-              className="min-h-[100px]"
-              value={formData.goals}
-              onChange={(e) => handleInputChange('goals', e.target.value)}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="goals">Objetivos e Desafios</Label>
+              <Textarea
+                id="goals"
+                placeholder="Ex: Quero aumentar a ocupação da agenda, automatizar processos administrativos, melhorar a experiência dos pacientes..."
+                className="min-h-[100px]"
+                value={formData.goals}
+                onChange={(e) => handleInputChange('goals', e.target.value)}
+                aria-label="Descreva seus objetivos e desafios principais"
+              />
+            </div>
           </CardContent>
         </Card>
 

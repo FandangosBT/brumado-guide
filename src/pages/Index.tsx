@@ -5,16 +5,18 @@ import { Step2Processar } from "@/components/steps/Step2Processar";
 import { Step3Identificar } from "@/components/steps/Step3Identificar";
 import { Step4Criar } from "@/components/steps/Step4Criar";
 import { Step5Otimizar } from "@/components/steps/Step5Otimizar";
-import { ROICalculator } from "@/components/ROICalculator";
-import { MeetingScheduler } from "@/components/MeetingScheduler";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { MessageSquare, Phone } from "lucide-react";
+import { MessageSquare, Phone, LogOut } from "lucide-react";
+import { startSession, endSession, trackCtaClick } from "@/lib/sdk";
+import { useAuth } from "@/hooks/use-auth";
 
 const Index = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const totalSteps = 5;
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const { logout } = useAuth();
 
   const nextStep = () => {
     if (currentStep < totalSteps - 1) {
@@ -37,6 +39,18 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentStep]);
 
+  // Session management: start on mount, end on unmount
+  useEffect(() => {
+    const id = (window.crypto && 'randomUUID' in window.crypto) ? window.crypto.randomUUID() : `${Date.now()}-xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx`.replace(/[xy]/g, (c) => {
+      const r = Math.random() * 16 | 0; const v = c === 'x' ? r : (r & 0x3 | 0x8); return v.toString(16);
+    });
+    setSessionId(id);
+    startSession({ sessionId: id, device: "web", userAgent: navigator.userAgent, consent: false }).catch(() => {});
+    return () => {
+      endSession({ sessionId: id }).catch(() => {});
+    };
+  }, []);
+
   if (isComplete) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -57,16 +71,13 @@ const Index = () => {
           <div className="space-y-4">
             <Button
               size="lg"
-              className="w-full sm:w-auto bg-gradient-hero hover:opacity-90 text-primary-foreground font-semibold px-8 py-4 text-lg glow-effect transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              onClick={() => window.open('tel:+5511999999999', '_blank')}
-              aria-label="Ligar para agendar conversa estratégica"
+              className="w-full sm:w-auto bg-gradient-hero hover:opacity-90 text-primary-foreground font-semibold px-8 py-4 text-lg glow-effect transition-transform duration-base ease-q7 hover:scale-105 focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              onClick={() => { if (sessionId) { trackCtaClick(sessionId, 'cta_whatsapp_conversation', { location: 'completion_screen' }); } window.open('https://wa.me/5511943334229?text=Olá! Completei a jornada consultiva e gostaria de agendar uma conversa sobre transformação digital para minha clínica.', '_blank'); }}
+              aria-label="Agendar conversa via WhatsApp"
             >
-              <Phone className="w-5 h-5 mr-2" />
-              Agendar Conversa (11) 99999-9999
+              <MessageSquare className="w-5 h-5 mr-2" />
+              Agendar Conversa
             </Button>
-            <div className="text-sm text-muted-foreground">
-              Ou envie um WhatsApp para começarmos a transformação
-            </div>
             <Button
               variant="outline"
               onClick={() => setIsComplete(false)}
@@ -82,7 +93,7 @@ const Index = () => {
   }
 
   return (
-    <main className="min-h-screen bg-background relative">
+    <main className="min-h-screen bg-background/20 backdrop-blur-[2px] relative">
       {/* Navigation */}
       <StepNavigation
         currentStep={currentStep}
@@ -92,9 +103,23 @@ const Index = () => {
         canGoNext={true}
       />
 
-      {/* Theme Toggle */}
-      <div className="fixed top-8 right-8 z-40 animate-fade-in">
-        <ThemeToggle />
+      {/* Theme Toggle e Logout */}
+      <div className="fixed top-4 right-4 sm:top-8 sm:right-8 z-40 animate-fade-in">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              logout();
+              // O ProtectedRoute vai redirecionar automaticamente para /login
+            }}
+            className="bg-background/80 backdrop-blur-sm border-border/50 hover:bg-background/90 transition-all duration-200 text-xs sm:text-sm px-2 sm:px-3"
+          >
+            <LogOut className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">Sair</span>
+          </Button>
+          <ThemeToggle />
+        </div>
       </div>
 
       {/* Floating Contact */}
@@ -102,7 +127,7 @@ const Index = () => {
         <Button
           size="sm"
           className="bg-gradient-hero hover:opacity-90 text-primary-foreground shadow-elegant rounded-full px-4 py-2 transition-all duration-300 hover:scale-105"
-          onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Vi a proposta consultiva e gostaria de conversar sobre transformação digital para minha clínica.', '_blank')}
+          onClick={() => { if (sessionId) { trackCtaClick(sessionId, 'whatsapp_floating', { location: 'floating_button' }); } window.open('https://wa.me/5511943334229?text=Olá! Estou explorando a jornada consultiva e gostaria de conversar sobre transformação digital para minha clínica.', '_blank'); }}
           aria-label="Entrar em contato via WhatsApp"
         >
           <MessageSquare className="w-4 h-4 mr-2" />
@@ -111,24 +136,11 @@ const Index = () => {
       </div>
 
       {/* Steps */}
-      {currentStep === 0 && <Step1Escutar onNext={nextStep} />}
-      {currentStep === 1 && <Step2Processar onNext={nextStep} />}
-      {currentStep === 2 && <Step3Identificar onNext={nextStep} />}
-      {currentStep === 3 && <Step4Criar onNext={nextStep} />}
-      {currentStep === 4 && <Step5Otimizar onComplete={completeJourney} />}
-      
-      {/* Interactive Tools */}
-      <section id="roi-calculator" className="py-20 bg-muted/10">
-        <div className="container mx-auto px-6">
-          <ROICalculator />
-        </div>
-      </section>
-      
-      <section id="meeting-scheduler" className="py-20">
-        <div className="container mx-auto px-6">
-          <MeetingScheduler />
-        </div>
-      </section>
+      {currentStep === 0 && <Step1Escutar onNext={nextStep} sessionId={sessionId ?? undefined} />}
+      {currentStep === 1 && <Step2Processar onNext={nextStep} sessionId={sessionId ?? undefined} />}
+      {currentStep === 2 && <Step3Identificar onNext={nextStep} sessionId={sessionId ?? undefined} />}
+      {currentStep === 3 && <Step4Criar onNext={nextStep} sessionId={sessionId ?? undefined} />}
+      {currentStep === 4 && <Step5Otimizar onComplete={completeJourney} sessionId={sessionId ?? undefined} />}
     </main>
   );
 };

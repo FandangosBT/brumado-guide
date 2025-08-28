@@ -43,14 +43,15 @@ export const StepNavigation = ({
           {Array.from({ length: totalSteps }, (_, i) => (
             <div
               key={i}
-              className={`progress-dot transition-all duration-300 ${
+              className={`progress-dot relative transition-all duration-300 before:content-[''] before:absolute before:-inset-4 before:rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
                 i === currentStep 
-                  ? `active ${stepColors[i]} animate-glow-pulse` 
+                  ? `active ${stepColors[i]} motion-safe:animate-glow-pulse` 
                   : i < currentStep 
                     ? "bg-muted-foreground scale-90" 
                     : "bg-muted scale-75"
               }`}
               aria-label={`Etapa ${i + 1}${i === currentStep ? ' - atual' : i < currentStep ? ' - concluída' : ' - pendente'}`}
+              aria-current={i === currentStep ? "step" : undefined}
               role="button"
               tabIndex={0}
             />

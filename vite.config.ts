@@ -5,6 +5,16 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./vitest.setup.ts'],
+    globals: true,
+    css: true,
+    coverage: {
+      provider: 'v8',
+      reportsDirectory: './coverage',
+    },
+  },
   server: {
     host: "::",
     port: 8080,

@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
 
 export default {
 	darkMode: ["class"],
@@ -19,14 +20,17 @@ export default {
 		},
 		extend: {
 			colors: {
-				border: 'hsl(var(--border))',
-				input: 'hsl(var(--input))',
+				/* Core Q7 aliases */
+				bg: 'hsl(var(--q7-color-bg))',
+				fg: 'hsl(var(--q7-color-fg))',
+				border: 'hsl(var(--q7-color-border))',
+				muted: 'hsl(var(--q7-color-muted))',
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))',
+					DEFAULT: 'hsl(var(--q7-color-primary))',
+					foreground: 'hsl(var(--q7-color-primary-fg))',
 					glow: 'hsl(var(--primary-glow))'
 				},
 				secondary: {
@@ -37,10 +41,6 @@ export default {
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
 					foreground: 'hsl(var(--destructive-foreground))'
-				},
-				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))'
 				},
 				accent: {
 					DEFAULT: 'hsl(var(--accent))',
@@ -55,11 +55,12 @@ export default {
 					foreground: 'hsl(var(--card-foreground))',
 					hover: 'hsl(var(--card-hover))'
 				},
-				'step-1': 'hsl(var(--step-1))',
-				'step-2': 'hsl(var(--step-2))',
-				'step-3': 'hsl(var(--step-3))',
-				'step-4': 'hsl(var(--step-4))',
-				'step-5': 'hsl(var(--step-5))',
+				/* Steps Q7 */
+				'step-1': 'hsl(var(--q7-step-1))',
+				'step-2': 'hsl(var(--q7-step-2))',
+				'step-3': 'hsl(var(--q7-step-3))',
+				'step-4': 'hsl(var(--q7-step-4))',
+				'step-5': 'hsl(var(--q7-step-5))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -71,10 +72,14 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				}
 			},
+			fontFamily: {
+				sans: ["var(--q7-font-sans)", "system-ui", "sans-serif"],
+				mono: ["var(--q7-font-mono)", "ui-monospace", "monospace"],
+			},
 			borderRadius: {
-				lg: 'var(--radius)',
-				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				lg: 'var(--q7-radius-lg)',
+				md: 'var(--q7-radius-md)',
+				sm: 'var(--q7-radius-sm)'
 			},
 			backgroundImage: {
 				'gradient-hero': 'var(--gradient-hero)',
@@ -88,11 +93,20 @@ export default {
 			boxShadow: {
 				'elegant': 'var(--shadow-elegant)',
 				'card': 'var(--shadow-card)',
-				'glow': 'var(--shadow-glow)'
+				'glow': 'var(--shadow-glow)',
+				'elev1': 'var(--q7-shadow-elev-1)',
+				'elev2': 'var(--q7-shadow-elev-2)'
 			},
 			transitionTimingFunction: {
 				'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
-				'bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+				'bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+				'q7': 'var(--q7-ease-standard)',
+				'q7emph': 'var(--q7-ease-emph)'
+			},
+			transitionDuration: {
+				'fast': 'var(--q7-dur-fast)',
+				'base': 'var(--q7-dur-base)',
+				'slow': 'var(--q7-dur-slow)'
 			},
 			keyframes: {
 				'accordion-down': {
@@ -142,5 +156,5 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [animate],
 } satisfies Config;

@@ -25,5 +25,16 @@ export default tseslint.config(
       ],
       "@typescript-eslint/no-unused-vars": "off",
     },
+  },
+  {
+    // Override para funções serverless no diretório api/
+    files: ["api/**/*.ts"],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.node,
+    },
+    rules: {
+      // regras específicas para Node podem ser adicionadas aqui no futuro
+    },
   }
 );

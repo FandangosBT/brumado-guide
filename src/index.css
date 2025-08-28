@@ -55,11 +55,11 @@
     /* Gradients */
     --gradient-hero: linear-gradient(135deg, hsl(var(--step-1)), hsl(var(--step-2)));
     --gradient-card: linear-gradient(135deg, hsl(var(--card)), hsl(var(--card-hover)));
-    --gradient-step-1: linear-gradient(135deg, hsl(var(--step-1) / 0.1), hsl(var(--step-1) / 0.05));
-    --gradient-step-2: linear-gradient(135deg, hsl(var(--step-2) / 0.1), hsl(var(--step-2) / 0.05));
-    --gradient-step-3: linear-gradient(135deg, hsl(var(--step-3) / 0.1), hsl(var(--step-3) / 0.05));
-    --gradient-step-4: linear-gradient(135deg, hsl(var(--step-4) / 0.1), hsl(var(--step-4) / 0.05));
-    --gradient-step-5: linear-gradient(135deg, hsl(var(--step-5) / 0.1), hsl(var(--step-5) / 0.05));
+    --gradient-step-1: linear-gradient(135deg, hsl(var(--q7-step-1) / 0.1), hsl(var(--q7-step-1) / 0.05));
+    --gradient-step-2: linear-gradient(135deg, hsl(var(--q7-step-2) / 0.1), hsl(var(--q7-step-2) / 0.05));
+    --gradient-step-3: linear-gradient(135deg, hsl(var(--q7-step-3) / 0.1), hsl(var(--q7-step-3) / 0.05));
+    --gradient-step-4: linear-gradient(135deg, hsl(var(--q7-step-4) / 0.1), hsl(var(--q7-step-4) / 0.05));
+    --gradient-step-5: linear-gradient(135deg, hsl(var(--q7-step-5) / 0.1), hsl(var(--q7-step-5) / 0.05));
 
     /* Shadows */
     --shadow-elegant: 0 20px 40px -10px hsl(var(--primary) / 0.1);
@@ -78,6 +78,41 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Q7 OPS alias tokens (conectando ao estado atual) */
+    --q7-color-bg: var(--background);
+    --q7-color-fg: var(--foreground);
+    --q7-color-muted: var(--muted);
+    --q7-color-border: var(--border);
+    --q7-color-primary: var(--primary);
+    --q7-color-primary-fg: var(--primary-foreground);
+
+    /* Steps (alias) */
+    --q7-step-1: var(--step-1);
+    --q7-step-2: var(--step-2);
+    --q7-step-3: var(--step-3);
+    --q7-step-4: var(--step-4);
+    --q7-step-5: var(--step-5);
+
+    /* Tipografia (alias) */
+    --q7-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+    --q7-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+    /* Espaçamentos e raio (placeholders) */
+    --q7-radius-sm: 8px;
+    --q7-radius-md: 12px;
+    --q7-radius-lg: 16px;
+
+    /* Sombras (alias) */
+    --q7-shadow-elev-1: var(--shadow-card);
+    --q7-shadow-elev-2: var(--shadow-elegant);
+
+    /* Motion (alias) */
+    --q7-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --q7-ease-emph: cubic-bezier(0.2, 0, 0, 1);
+    --q7-dur-fast: 150ms;
+    --q7-dur-base: 250ms;
+    --q7-dur-slow: 400ms;
   }
 
   .light {
@@ -161,37 +196,74 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--q7-font-sans);
   }
 }
 
 @layer components {
   /* Interactive Cards */
   .interactive-card {
-    @apply bg-gradient-to-br from-card to-card-hover border border-border rounded-2xl p-6 transition-all duration-500 hover:shadow-[var(--shadow-card)] hover:scale-[1.02] cursor-pointer focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2;
+    @apply bg-gradient-to-br from-card to-card-hover border border-border rounded-2xl p-6 shadow-elev1 transition-transform duration-base ease-q7 hover:shadow-elev2 hover:scale-[1.02] cursor-pointer focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2;
   }
 
   .step-card {
     @apply interactive-card backdrop-blur-sm;
   }
 
-  .step-card.step-1 { @apply bg-[var(--gradient-step-1)] border-step-1/20 hover:shadow-step-1/20; }
-  .step-card.step-2 { @apply bg-[var(--gradient-step-2)] border-step-2/20 hover:shadow-step-2/20; }
-  .step-card.step-3 { @apply bg-[var(--gradient-step-3)] border-step-3/20 hover:shadow-step-3/20; }
-  .step-card.step-4 { @apply bg-[var(--gradient-step-4)] border-step-4/20 hover:shadow-step-4/20; }
-  .step-card.step-5 { @apply bg-[var(--gradient-step-5)] border-step-5/20 hover:shadow-step-5/20; }
+  .step-card.step-1 { 
+    background: var(--gradient-step-1);
+    @apply border-step-1/20 shadow-elev1 hover:shadow-elev2;
+  }
+  .step-card.step-2 { 
+    background: var(--gradient-step-2);
+    @apply border-step-2/20 shadow-elev1 hover:shadow-elev2;
+  }
+  .step-card.step-3 { 
+    background: var(--gradient-step-3);
+    @apply border-step-3/20 shadow-elev1 hover:shadow-elev2;
+  }
+  .step-card.step-4 { 
+    background: var(--gradient-step-4);
+    @apply border-step-4/20 shadow-elev1 hover:shadow-elev2;
+  }
+  .step-card.step-5 { 
+    background: var(--gradient-step-5);
+    @apply border-step-5/20 shadow-elev1 hover:shadow-elev2;
+  }
 
   /* Navigation */
   .step-nav {
-    @apply fixed top-8 left-1/2 transform -translate-x-1/2 z-50 bg-card/80 backdrop-blur-md border border-border rounded-full px-6 py-3;
+    @apply fixed top-8 left-1/2 transform -translate-x-1/2 z-30 bg-card/90 backdrop-blur-md border border-border rounded-full px-6 py-3;
   }
 
   /* Progress Indicators */
   .progress-dot {
     @apply w-3 h-3 rounded-full transition-all duration-300;
+    /* Ensure minimum touch target via pseudo-element */
+    min-width: 40px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .progress-dot::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: currentColor;
   }
 
   .progress-dot.active {
     @apply scale-125 shadow-[var(--shadow-glow)];
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .progress-dot.active {
+      @apply shadow-none;
+      transform: none !important;
+    }
   }
 
   /* Flip Cards */
@@ -221,13 +293,263 @@
   }
 
   .glow-effect::before {
-    @apply content-[''] absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 pointer-events-none;
+    @apply content-[''] absolute inset-0 rounded-2xl opacity-0 pointer-events-none;
     background: var(--gradient-hero);
     filter: blur(20px);
     z-index: -1;
+    transition: opacity var(--q7-dur-slow) var(--q7-ease-standard);
   }
 
   .glow-effect:hover::before {
     @apply opacity-20;
+  }
+
+  .glow-effect:focus-visible::before {
+    @apply opacity-30;
+  }
+
+  /* CTA Button específico com contraste garantido */
+  .cta-button {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--step-5)));
+    color: white;
+    font-weight: 700;
+    box-shadow: var(--q7-shadow-elev-2);
+    transition: all var(--q7-dur-base) var(--q7-ease-standard);
+  }
+
+  .cta-button:hover {
+    transform: scale(1.05);
+    box-shadow: var(--q7-shadow-elev-2), 0 0 30px hsl(var(--primary) / 0.3);
+  }
+
+  .cta-button:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+    transform: scale(1.02);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-button:hover,
+    .cta-button:focus-visible {
+      transform: none;
+    }
+  }
+
+  /* Motion utilities (CSS, token-powered) */
+  @keyframes q7-fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in { animation: q7-fade-in var(--q7-dur-base) var(--q7-ease-standard) both; }
+
+  @keyframes q7-scale-in {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .animate-scale-in { animation: q7-scale-in var(--q7-dur-base) var(--q7-ease-standard) both; }
+
+  @keyframes q7-slide-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-slide-up { animation: q7-slide-up var(--q7-dur-base) var(--q7-ease-standard) both; }
+
+  @keyframes q7-glow-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+  .animate-glow-pulse { animation: q7-glow-pulse 1.8s var(--q7-ease-standard) infinite; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in,
+    .animate-scale-in,
+    .animate-slide-up,
+    .animate-glow-pulse { animation: none !important; }
+  }
+
+  /* TagPill utilitário conforme spec */
+  .tag-pill {
+    @apply inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-semibold;
+    opacity: 0;
+    animation: fade-in var(--q7-dur-base) var(--q7-ease-standard) forwards;
+  }
+
+  /* TagPill variants por etapa */
+  .tag-pill.step-1 {
+    background: color-mix(in srgb, hsl(var(--q7-step-1)) 12%, transparent);
+    color: hsl(var(--q7-step-1));
+  }
+  
+  .tag-pill.step-1::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: hsl(var(--q7-step-1));
+  }
+
+  .tag-pill.step-2 {
+    background: color-mix(in srgb, hsl(var(--q7-step-2)) 12%, transparent);
+    color: hsl(var(--q7-step-2));
+  }
+  
+  .tag-pill.step-2::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: hsl(var(--q7-step-2));
+  }
+
+  .tag-pill.step-3 {
+    background: color-mix(in srgb, hsl(var(--q7-step-3)) 12%, transparent);
+    color: hsl(var(--q7-step-3));
+  }
+  
+  .tag-pill.step-3::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: hsl(var(--q7-step-3));
+  }
+
+  .tag-pill.step-4 {
+    background: color-mix(in srgb, hsl(var(--q7-step-4)) 12%, transparent);
+    color: hsl(var(--q7-step-4));
+  }
+  
+  .tag-pill.step-4::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: hsl(var(--q7-step-4));
+  }
+
+  .tag-pill.step-5 {
+    background: color-mix(in srgb, hsl(var(--q7-step-5)) 12%, transparent);
+    color: hsl(var(--q7-step-5));
+  }
+  
+  .tag-pill.step-5::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: hsl(var(--q7-step-5));
+  }
+
+  .tag-pill:focus-visible {
+    outline: 2px solid hsl(var(--q7-color-primary));
+    outline-offset: 2px;
+  }
+
+  /* Animação fade-in para TagPill */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tag-pill {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+    
+    @keyframes fade-in {
+      from, to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+
+  /* Badge variants por etapa com color-mix */
+  .badge-step-1 {
+    background: color-mix(in srgb, hsl(var(--q7-step-1)) 12%, transparent);
+    color: hsl(var(--q7-step-1));
+  }
+  
+  .badge-step-1::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: hsl(var(--q7-step-1));
+    margin-right: 6px;
+  }
+
+  .badge-step-2 {
+    background: color-mix(in srgb, hsl(var(--q7-step-2)) 12%, transparent);
+    color: hsl(var(--q7-step-2));
+  }
+  
+  .badge-step-2::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: hsl(var(--q7-step-2));
+    margin-right: 6px;
+  }
+
+  .badge-step-3 {
+    background: color-mix(in srgb, hsl(var(--q7-step-3)) 12%, transparent);
+    color: hsl(var(--q7-step-3));
+  }
+  
+  .badge-step-3::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: hsl(var(--q7-step-3));
+    margin-right: 6px;
+  }
+
+  .badge-step-4 {
+    background: color-mix(in srgb, hsl(var(--q7-step-4)) 12%, transparent);
+    color: hsl(var(--q7-step-4));
+  }
+  
+  .badge-step-4::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: hsl(var(--q7-step-4));
+    margin-right: 6px;
+  }
+
+  .badge-step-5 {
+    background: color-mix(in srgb, hsl(var(--q7-step-5)) 12%, transparent);
+    color: hsl(var(--q7-step-5));
+  }
+  
+  .badge-step-5::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: hsl(var(--q7-step-5));
+    margin-right: 6px;
   }
 }
