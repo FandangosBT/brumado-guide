@@ -12,83 +12,88 @@ interface Step1EscutarProps {
 }
 
 const scannerData = {
-  cliente: "Dra. Giovana – Clínica Odontológica",
-  data: "Agosto/2025",
+  cliente: "Quinta de Brumado",
+  data: "Setembro/2025",
   consultoria: "Q7 Ops",
   contextoGeral:
-    "A clínica opera com três doutoras e três secretárias, atendendo em modelo compartilhado de pacientes. Apesar da qualidade clínica reconhecida, a operação apresenta dependência excessiva de processos manuais, o que gera sobrecarga, risco de erros e perda de previsibilidade. A Dra. Giovana demonstra forte preocupação com personalização e atenção ao paciente, não aceitando automações ‘frias’. As soluções precisam ser tecnológicas, mas com tom humano.",
+    "A Quinta de Brumado atua em duas frentes principais: hospedagem e eventos (casamentos, aniversários e corporativos), com integração entre ambas. A operação é administrada por três sócios (Felipe, Sandra e Peninha), mas sem um sistema centralizado. Hoje, a gestão é feita em Excel + WhatsApp + sistema parcial de hospedagem (OTA/Booking), o que gera dificuldade no controle financeiro consolidado, falta de integração entre hospedagem e eventos, perda de tempo na geração de orçamentos personalizados e insegurança quanto à disponibilidade (risco de overbooking). Felipe ressaltou a necessidade de um sistema próprio e flexível, que preserve a personalização do atendimento em eventos e seja capaz de integrar as operações no futuro.",
   processos: {
-    agenda: [
-      "Gerido de forma manual em software básico",
-      "Três agendas paralelas → risco de duplicidade",
-      "Sem lembretes automáticos e recuperação de faltas/inativos",
-      "Confusão para pacientes sobre qual doutora/secretária atende",
+    financeiro: [
+      "Controle feito em Excel.",
+      "Sistema atual não gera relatórios claros.",
+      "Dificuldade para consolidar despesas, receitas e investimentos.",
+      "Falta de previsibilidade de fluxo de caixa.",
     ],
-    contratos: [
-      "Preenchimento manual de dados de pacientes",
-      "Retrabalho frequente (CPF, endereço, assinatura)",
-      "Perda de tempo administrativo",
+    hospedagem: [
+      "Uso de plataformas externas (Booking/OTAs).",
+      "Risco de overbooking por ausência de integração direta com agenda interna.",
+      "Agenda no Google Calendar usada manualmente.",
+    ],
+    eventos: [
+      "Orçamentos personalizados feitos de forma manual (contato a contato).",
+      "Planilhas usadas para simular custos.",
+      "Sem histórico organizado de propostas.",
+      "Processos de follow-up não estruturados.",
     ],
     estoque: [
-      "Controle feito em planilha de Excel",
-      "Sem alertas automáticos",
-      "Risco de ruptura e compras emergenciais",
+      "Controle em planilhas e anotações.",
+      "Sem alertas automáticos de reposição ou vencimento.",
+      "Risco de compras emergenciais.",
+    ],
+    captacao: [
+      "Site atual funciona apenas como “outdoor digital” (fotos bonitas, pouca informação estruturada).",
+      "Leads chegam pelo WhatsApp → sem qualificação prévia.",
+      "Redes sociais ativas, mas sem integração com CRM.",
+      "Grande volume de contatos manuais para filtrar (ex.: 350 noivas para ligar).",
     ],
     comunicacao: [
-      "Orçamento personalizado em PDF → enviado por WhatsApp",
-      "Follow-up manual após 2 dias (processo inventado)",
-      "Sem histórico organizado ou CRM",
-    ],
-    marketing: [
-      "Dra. Giovana centraliza publicações",
-      "Perfeccionismo gera bloqueios → baixa consistência",
-      "Consultoria externa em fase inicial (calendário macro)",
-    ],
-    cobrancas: [
-      "Utilização de PIX e links de cartão (positivo)",
-      "Eliminação de boletos",
-      "Sem automação de lembretes financeiros",
+      "WhatsApp é o canal central, mas não integrado ao sistema.",
+      "Hospedagem aceita automação no atendimento inicial.",
+      "Eventos exigem contato humano e personalizado.",
     ],
   },
   gargalos: [
-    "Duplicidade de agendamentos → perda de tempo + desgaste",
-    "Sobrecarga administrativa → contratos e anotações manuais",
-    "Perda de previsibilidade → sem métricas de ocupação/retorno",
-    "Dependência de memória/anotações → processos improvisados",
-    "Falta de consistência digital → redes irregulares",
-    "Ausência de CRM → leads/orçamentos sem acompanhamento",
+    "Sobrecarga financeira: uso de Excel e relatórios fragmentados impede visão estratégica.",
+    "Perda de previsibilidade: falta de integração entre hospedagem e eventos gera insegurança.",
+    "Retrabalho em orçamentos: cálculos refeitos diversas vezes, com alto risco de erro.",
+    "Captação de leads ineficiente: contatos chegam frios, demandando alto esforço de atendimento.",
+    "Dependência de processos manuais em estoque, contratos e agendamento.",
   ],
   alavancas: {
     curtoPrazo: [
-      "OpsUnit – Agenda Lucrativa + CRM Vivo (confirmações automáticas, recuperação de inativos, integração de agendas)",
-      "OpsUnit – Gestão de Contratos Digitais (geração automática, assinatura eletrônica)",
+      "OpsUnit – Financeiro Vivo + CRM: Centralizar contas a pagar/receber; Relatórios automáticos e dashboards de fluxo de caixa; Integração inicial de leads/eventos com hospedagem.",
+      "OpsUnit – Agenda Integrada: Sincronização com OTAs (Booking/Airbnb); Controle de disponibilidade em tempo real; Área interna de agenda para eventos.",
     ],
     medioPrazo: [
-      "OpsUnit – Estoque Inteligente (controle automatizado, alertas de reposição)",
-      "BrandForge – Suporte Digital (calendário editorial com roteiros, automação de publicações)",
+      "OpsUnit – Gestão de Orçamentos & Contratos Digitais: Geração automática de propostas personalizadas; Assinatura eletrônica integrada; Histórico organizado de negociações.",
+      "OpsUnit – Estoque Inteligente: Controle de insumos (restaurante + eventos); Alertas de validade e reposição.",
     ],
     longoPrazo: [
-      "TimeOS – Painel central integrando agenda, contratos, estoque e CRM",
-      "Dashboards com indicadores de produtividade, fluxo financeiro e recorrência",
+      "BrandForge – Funil Digital & Infraestrutura de Captação: Landing pages segmentadas (casamentos, aniversários, hospedagem); Formulários de pré-qualificação → leads mais quentes; Integração com CRM para follow-up automático.",
+      "TimeOS – Inteligência de Mercado via WhatsApp: Relatórios de ocupação, sazonalidade e receita; Insights preditivos de demanda; Atendimento integrado multicanal.",
     ],
   },
   jornada: {
-    passo1: "Piloto Operacional (Agenda + CRM Vivo): eliminar duplicidade de agendas, padronizar confirmações, recuperar inativos",
-    passo2: "Automação de Documentos: digitalizar contratos e reduzir carga manual",
-    passo3: "Expansão para Estoque Inteligente: controle de insumos com alertas",
-    passo4: "Estrutura Digital e Marketing Automatizado: rotina editorial sem sobrecarga",
-    passoFinal: "TimeOS (Integração Total): dashboard único com clareza operacional e financeira",
+    passo1:
+      "Financeiro + Agenda Integrada (Piloto): Centralizar fluxo financeiro; Eliminar risco de overbooking.",
+    passo2:
+      "CRM Vivo + Orçamentos Digitais: Estruturar follow-up de leads; Reduzir tempo de geração de propostas.",
+    passo3:
+      "Estoque Inteligente: Controle preventivo de insumos; Redução de compras emergenciais.",
+    passo4:
+      "Funil Digital e Marketing Integrado: Leads mais qualificados via páginas segmentadas; Integração com o CRM.",
+    passoFinal:
+      "TimeOS (Integração Total): Inteligência contínua de gestão via WhatsApp.",
   },
   ganhos: [
-    "+10h livres/semana para a equipe administrativa",
-    "Zero risco de duplicidade de agendas",
-    "Redução de 70% no tempo com contratos/papelada",
-    "Maior previsibilidade da taxa de ocupação",
-    "Consistência digital sem demandar esforço diário",
-    "Base pronta para expansão organizada",
+    "+10 horas semanais livres dos sócios/administradores.",
+    "Zero risco de overbooking entre hospedagem e eventos.",
+    "70% menos tempo gasto na geração de orçamentos.",
+    "Previsibilidade financeira com dashboards automáticos.",
+    "Leads mais quentes, reduzindo esforço de prospecção.",
   ],
   resumo:
-    "Hoje sua clínica funciona bem, mas à custa de esforço manual e improvisos. O Scanner Operacional mostra que pequenas automações — começando pela agenda e contratos — podem liberar tempo, reduzir erros e dar previsibilidade sem perder a personalização que seus pacientes valorizam. A evolução natural é integrar tudo no TimeOS, para que você tenha clareza e segurança em cada decisão.",
+    "Hoje a Quinta funciona com muito esforço manual e improvisos. Pequenas automações no financeiro e na agenda integrada já trarão clareza e segurança imediatas. A partir disso, contratos digitais, estoque e captação estruturada vão permitir escalar sem perder o toque humano que diferencia a experiência da Quinta.",
 };
 
 export const Step1Escutar = ({ onNext, sessionId }: Step1EscutarProps) => {
@@ -98,8 +103,8 @@ export const Step1Escutar = ({ onNext, sessionId }: Step1EscutarProps) => {
     }
     // Criar link para download do arquivo PDF
     const link = document.createElement('a');
-    link.href = '/Scanner-Operacional-EPICO.pdf';
-    link.download = 'Scanner-Operacional-EPICO.pdf';
+    link.href = '/Scanner-Operacional-EPICO-Quinta-de-Brumado.pdf';
+    link.download = 'Scanner-Operacional-EPICO-Quinta-de-Brumado.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -107,7 +112,7 @@ export const Step1Escutar = ({ onNext, sessionId }: Step1EscutarProps) => {
 
   const handleNext = () => {
     if (sessionId) {
-      trackStepComplete(sessionId, "Escutar", { scannerPreset: "DraGiovana" });
+      trackStepComplete(sessionId, "Escutar", { scannerPreset: "QuintaDeBrumado" });
     }
     onNext();
   };
@@ -341,18 +346,18 @@ export const Step1Escutar = ({ onNext, sessionId }: Step1EscutarProps) => {
 
 function formatKey(key: string) {
   switch (key) {
-    case "agenda":
-      return "Agendamento & Agenda";
-    case "contratos":
-      return "Contratos & Documentos";
+    case "financeiro":
+      return "Financeiro";
+    case "hospedagem":
+      return "Hospedagem";
+    case "eventos":
+      return "Eventos";
     case "estoque":
       return "Estoque & Insumos";
+    case "captacao":
+      return "Captação de Leads & Marketing";
     case "comunicacao":
-      return "Comunicação & Orçamentos";
-    case "marketing":
-      return "Marketing & Redes";
-    case "cobrancas":
-      return "Cobranças & Pagamentos";
+      return "Comunicação & Atendimento";
     default:
       return key;
   }

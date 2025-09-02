@@ -72,7 +72,7 @@ const Index = () => {
             <Button
               size="lg"
               className="w-full sm:w-auto bg-gradient-hero hover:opacity-90 text-primary-foreground font-semibold px-8 py-4 text-lg glow-effect transition-transform duration-base ease-q7 hover:scale-105 focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              onClick={() => { if (sessionId) { trackCtaClick(sessionId, 'cta_whatsapp_conversation', { location: 'completion_screen' }); } window.open('https://wa.me/5511943334229?text=Olá! Completei a jornada consultiva e gostaria de agendar uma conversa sobre transformação digital para minha clínica.', '_blank'); }}
+              onClick={() => { if (sessionId) { trackCtaClick(sessionId, 'cta_whatsapp_conversation', { location: 'completion_screen' }); } window.open('https://wa.me/5511943334229?text=Olá! Completei a jornada consultiva e gostaria de agendar uma conversa sobre transformação digital para meu negócio.', '_blank'); }}
               aria-label="Agendar conversa via WhatsApp"
             >
               <MessageSquare className="w-5 h-5 mr-2" />
@@ -127,7 +127,7 @@ const Index = () => {
         <Button
           size="sm"
           className="bg-gradient-hero hover:opacity-90 text-primary-foreground shadow-elegant rounded-full px-4 py-2 transition-all duration-300 hover:scale-105"
-          onClick={() => { if (sessionId) { trackCtaClick(sessionId, 'whatsapp_floating', { location: 'floating_button' }); } window.open('https://wa.me/5511943334229?text=Olá! Estou explorando a jornada consultiva e gostaria de conversar sobre transformação digital para minha clínica.', '_blank'); }}
+          onClick={() => { if (sessionId) { trackCtaClick(sessionId, 'whatsapp_floating', { location: 'floating_button' }); } window.open('https://wa.me/5511943334229?text=Olá! Estou explorando a jornada consultiva e gostaria de conversar sobre transformação digital para meu negócio.', '_blank'); }}
           aria-label="Entrar em contato via WhatsApp"
         >
           <MessageSquare className="w-4 h-4 mr-2" />

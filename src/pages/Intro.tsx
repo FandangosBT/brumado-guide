@@ -8,30 +8,55 @@ const Intro = () => {
   const location = useLocation();
   const from = (location.state as { from?: string } | null)?.from || "/";
   const [isVisible, setIsVisible] = useState(false);
+  const [videoSrc, setVideoSrc] = useState("/windmilll.mp4");
 
   const handleNavigate = useCallback(() => {
     setIsVisible(false);
     setTimeout(() => navigate(from, { replace: true }), 800);
   }, [navigate, from]);
 
+  const hasNavigatedRef = useRef(false);
+  const timeoutRef = useRef<number | null>(null);
+  const safeNavigate = useCallback(() => {
+    if (hasNavigatedRef.current) return;
+    hasNavigatedRef.current = true;
+    handleNavigate();
+  }, [handleNavigate]);
+
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    const onEnded = () => handleNavigate();
+
+    const onEnded = () => safeNavigate();
+    const onPlay = () => {
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = window.setTimeout(() => {
+        try { v.pause(); } catch { /* noop */ }
+        safeNavigate();
+      }, 7000);
+    };
+
     v.addEventListener("ended", onEnded);
-    return () => v.removeEventListener("ended", onEnded);
-  }, [handleNavigate]);
+    v.addEventListener("play", onPlay);
+
+    return () => {
+      v.removeEventListener("ended", onEnded);
+      v.removeEventListener("play", onPlay);
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+    };
+  }, [safeNavigate]);
 
   return (
     <div className={`fixed inset-0 bg-black transition-opacity duration-[800ms] ${isVisible ? "opacity-100" : "opacity-0"}`}>
       <video
         ref={videoRef}
         className="w-full h-full object-cover"
-        src="/future.mp4"
+        src={videoSrc}
         autoPlay
         muted
         playsInline
         onCanPlay={() => setIsVisible(true)}
+        onError={() => setVideoSrc("/auto-future.mp4")}
       />
       <div className="absolute bottom-6 left-0 right-0 flex justify-center">
         <Button

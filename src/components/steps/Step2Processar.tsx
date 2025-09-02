@@ -13,12 +13,12 @@ interface Step2ProcessarProps {
 }
 
 const META = {
-  lead: "Dra. Giovana – Clínica Odontológica",
-  data: "Agosto/2025",
+  lead: "Quinta de Brumado (Hospedagem + Eventos)",
+  data: "Setembro/2025",
   consultoria: "Q7 Ops",
 };
 
-type CategoryId = "agenda" | "contratos" | "estoque" | "comunicacao" | "marketing";
+type CategoryId = "financeiro" | "agenda" | "orcamentos" | "estoque" | "captacao" | "comunicacao";
 
 const CATEGORIES: Array<{
   id: CategoryId;
@@ -30,80 +30,106 @@ const CATEGORIES: Array<{
   esforcoScore: number; // 0-100 (quanto menor, melhor)
 }> = [
   {
-    id: "agenda",
-    icon: CalendarDays,
-    title: "Agenda e Atendimento",
+    id: "financeiro",
+    icon: FileText,
+    title: "Financeiro & Gestão de Custos",
     bullets: [
-      "Agendas descentralizadas por secretária → risco de duplicidade",
-      "Ausência de lembretes automáticos",
-      "Sem recuperação de pacientes inativos",
+      "Controle realizado em Excel, paralelo ao sistema atual.",
+      "Relatórios financeiros confusos, sem visão consolidada.",
+      "Dificuldade em prever fluxo de caixa e rentabilidade de eventos.",
+      "Alto risco de erro nos cálculos (orçamentos refeitos várias vezes).",
     ],
-    impacto: "Perda de pacientes, tempo em remarcações e desgaste de imagem",
-    impactoScore: 90,
-    esforcoScore: 35,
+    impacto:
+      "Perda de clareza sobre custos reais, risco de decisões equivocadas e insegurança nos investimentos.",
+    impactoScore: 95,
+    esforcoScore: 50,
   },
   {
-    id: "contratos",
-    icon: FileSignature,
-    title: "Contratos e Documentos",
+    id: "agenda",
+    icon: CalendarDays,
+    title: "Agenda & Disponibilidade",
     bullets: [
-      "Preenchimento manual de dados",
-      "Retrabalho e risco de erro",
-      "Assinatura presencial",
+      "Agenda da hospedagem controlada manualmente no Google Calendar.",
+      "Plataformas externas (Booking/OTAs) não integradas.",
+      "Risco de overbooking entre reservas de hospedagem e eventos.",
+      "Ausência de um calendário unificado acessível a todos os administradores.",
     ],
-    impacto: "Tempo desperdiçado e lentidão no fechamento de tratamentos",
-    impactoScore: 75,
-    esforcoScore: 40,
+    impacto:
+      "Perda de credibilidade com clientes, retrabalho e desgaste operacional.",
+    impactoScore: 85,
+    esforcoScore: 45,
+  },
+  {
+    id: "orcamentos",
+    icon: FileSignature,
+    title: "Orçamentos & Propostas",
+    bullets: [
+      "Orçamentos personalizados feitos manualmente, sem padronização.",
+      "Alto tempo gasto para calcular valores → risco de inconsistência.",
+      "Follow-up improvisado, sem CRM ou histórico organizado.",
+    ],
+    impacto:
+      "Lentidão no fechamento de contratos, perda de oportunidades e desgaste dos administradores.",
+    impactoScore: 80,
+    esforcoScore: 60,
   },
   {
     id: "estoque",
     icon: Package,
-    title: "Estoque e Insumos",
+    title: "Estoque & Insumos",
     bullets: [
-      "Controle em Excel sem alertas",
-      "Risco de ruptura",
-      "Compras emergenciais",
+      "Controle manual em planilhas/anotações.",
+      "Sem alertas automáticos de validade ou reposição.",
+      "Compras emergenciais frequentes, aumentando custos.",
     ],
-    impacto: "Interrupções no atendimento, custos maiores e perda de confiança",
-    impactoScore: 65,
+    impacto:
+      "Interrupções de operação, desperdício financeiro e falta de previsibilidade em insumos críticos.",
+    impactoScore: 70,
     esforcoScore: 55,
+  },
+  {
+    id: "captacao",
+    icon: Megaphone,
+    title: "Captação de Leads & Marketing",
+    bullets: [
+      "Site atual funciona apenas como “outdoor digital”.",
+      "Leads chegam pelo WhatsApp sem qualificação prévia.",
+      "Grande volume de contatos manuais (ex.: 350 noivas para ligar).",
+      "Falta de segmentação (casamento, hospedagem, eventos corporativos).",
+    ],
+    impacto:
+      "Perda de tempo em triagem manual, contatos esquecidos e baixa previsibilidade de conversão.",
+    impactoScore: 75,
+    esforcoScore: 65,
   },
   {
     id: "comunicacao",
     icon: MessageSquare,
-    title: "Comunicação e Orçamentos",
+    title: "Comunicação & Atendimento",
     bullets: [
-      "Orçamentos em PDF por WhatsApp (sem histórico)",
-      "Follow-up improvisado (retorno em 2 dias)",
-      "Sem CRM ativo",
+      "Hospedagem aceita automação, mas eventos exigem personalização total.",
+      "Falta de integração entre canais (site, WhatsApp, redes sociais).",
+      "Administradores sobrecarregados com atendimento manual.",
     ],
-    impacto: "Orçamentos esquecidos, perda de receita recorrente e decisões sem dados",
-    impactoScore: 80,
-    esforcoScore: 45,
-  },
-  {
-    id: "marketing",
-    icon: Megaphone,
-    title: "Marketing e Digital",
-    bullets: [
-      "Gestão pessoal das redes pela doutora",
-      "Consultoria externa limitada à macro",
-      "Presença digital inconsistente",
-    ],
-    impacto: "Baixa previsibilidade de atração de pacientes e desgaste emocional",
-    impactoScore: 60,
+    impacto:
+      "Ineficiência no relacionamento com clientes, perda de escalabilidade e risco de experiências negativas.",
+    impactoScore: 78,
     esforcoScore: 60,
   },
 ];
 
+
+
 // Conexões entre categorias correlatas
 const RELATED: Record<CategoryId, CategoryId[]> = {
-  agenda: ["comunicacao", "contratos"],
-  contratos: ["agenda", "comunicacao"],
+  financeiro: ["agenda", "orcamentos"],
+  agenda: ["orcamentos", "comunicacao", "estoque"],
+  orcamentos: ["comunicacao", "captacao", "financeiro"],
   estoque: ["agenda"],
-  comunicacao: ["agenda", "marketing", "contratos"],
-  marketing: ["comunicacao"],
+  captacao: ["comunicacao", "orcamentos"],
+  comunicacao: ["agenda", "captacao", "orcamentos"],
 };
+
 
 export const Step2Processar = ({ onNext, sessionId }: Step2ProcessarProps) => {
   const hoveredRef = useRef<Record<string, number>>({});
@@ -127,8 +153,8 @@ export const Step2Processar = ({ onNext, sessionId }: Step2ProcessarProps) => {
     }
     // Criar link para download do arquivo PDF
     const link = document.createElement('a');
-    link.href = '/Mapa-de-Gargalos-Invisiveis-Clinica-Dra-Giovana.pdf';
-    link.download = 'Mapa-de-Gargalos-Invisiveis-Clinica-Dra-Giovana.pdf';
+    link.href = '/Mapa-de-Gargalos-Invisiveis-Quinta-de-Brumado.pdf';
+    link.download = 'Mapa-de-Gargalos-Invisiveis-Quinta-de-Brumado.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -161,6 +187,9 @@ export const Step2Processar = ({ onNext, sessionId }: Step2ProcessarProps) => {
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Mapa de Gargalos Invisíveis — onde a operação perde eficiência sem você perceber.
           </p>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            📌 Mapa de Gargalos Invisíveis – Quinta de Brumado
+          </p>
         </header>
 
         {/* Meta + Ações */}
@@ -171,6 +200,15 @@ export const Step2Processar = ({ onNext, sessionId }: Step2ProcessarProps) => {
           <Button variant="outline" onClick={handleGeneratePdf} className="border-step-2 text-step-2">
             <FileText className="w-4 h-4 mr-2" /> Gerar PDF do Mapa
           </Button>
+        </div>
+
+        {/* Contexto Geral */}
+        <div className="max-w-4xl mx-auto mb-6">
+          <Card className="step-card step-2">
+            <CardContent className="pt-6 text-muted-foreground leading-relaxed">
+              A Quinta possui estrutura física diferenciada e grande potencial de crescimento em hospedagem e eventos. Porém, a operação depende de processos manuais e sistemas fragmentados. Durante a conversa, emergiram gargalos não imediatamente visíveis, mas que comprometem eficiência, previsibilidade e escala sustentável.
+            </CardContent>
+          </Card>
         </div>
 
         {/* Mapa */}
@@ -290,6 +328,27 @@ export const Step2Processar = ({ onNext, sessionId }: Step2ProcessarProps) => {
               );
             })}
           </div>
+        </div>
+
+        {/* Conclusão e Oportunidades */}
+        <div className="max-w-4xl mx-auto mt-8">
+          <Card className="step-card step-2">
+            <CardHeader>
+              <CardTitle>Conclusão e Oportunidades</CardTitle>
+              <CardDescription>Oportunidade de evolução modular</CardDescription>
+            </CardHeader>
+            <CardContent className="text-muted-foreground leading-relaxed">
+              <p className="mb-4">
+                A Quinta de Brumado está presa em uma rotina de retrabalho manual, duplicidade de processos e baixa previsibilidade financeira. Os gargalos invisíveis afetam diretamente a experiência dos clientes e a capacidade de crescimento sustentável.
+              </p>
+              <ul className="space-y-2">
+                <li>• Passo inicial: OpsUnit – Financeiro Vivo + Agenda Integrada (impacto imediato, reduz risco de erro e dá clareza financeira).</li>
+                <li>• Expansão natural: Orçamentos & Contratos Digitais + CRM Vivo (mais previsibilidade comercial).</li>
+                <li>• Médio prazo: Estoque Inteligente e Funil Digital (eficiência operacional + captação qualificada).</li>
+                <li>• Longo prazo: TimeOS (integração total, inteligência de mercado e gestão via WhatsApp).</li>
+              </ul>
+            </CardContent>
+          </Card>
         </div>
 
         {/* CTA */}

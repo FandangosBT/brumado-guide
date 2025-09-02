@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import Index from '../pages/Index';
+import { AuthProvider } from '@/hooks/use-auth';
 
 // Mock do SDK
 vi.mock('@/lib/sdk', () => ({
@@ -62,7 +63,11 @@ describe('Journey Flow Integration', () => {
   });
 
   it('completa fluxo 1→5 com tracking', async () => {
-    render(<Index />);
+    render(
+      <AuthProvider>
+        <Index />
+      </AuthProvider>
+    );
 
     // Step 1: ESCUTAR
     await waitFor(() => {
@@ -70,11 +75,11 @@ describe('Journey Flow Integration', () => {
     });
 
     // Expande um item do accordion
-    const accordionItem = screen.getByText('Agenda Desorganizada');
+    const accordionItem = screen.getByText('1. Contexto Geral');
     await user.click(accordionItem);
 
     // Avança para próxima etapa
-    const nextButton = screen.getByRole('button', { name: /vamos adiante/i });
+    const nextButton = screen.getByRole('button', { name: /continuar/i });
     await user.click(nextButton);
 
     // Step 2: PROCESSAR
@@ -142,11 +147,15 @@ describe('Journey Flow Integration', () => {
   });
 
   it('gera PDF ao final da jornada', async () => {
-    render(<Index />);
+    render(
+      <AuthProvider>
+        <Index />
+      </AuthProvider>
+    );
 
     // Navega até Step 5
     for (let i = 0; i < 4; i++) {
-      const nextButton = screen.getByRole('button', { name: /vamos adiante|identificar as soluções|avançar para criação do plano|ver o futuro completo/i });
+      const nextButton = screen.getByRole('button', { name: /avançar|continuar|identificar as soluções|avançar para criação do plano|ver o futuro completo/i });
       await user.click(nextButton);
       await waitFor(() => {
         expect(screen.getByText(/OTIMIZAR|PROCESSAR|IDENTIFICAR|CRIAR/)).toBeInTheDocument();
@@ -163,18 +172,22 @@ describe('Journey Flow Integration', () => {
   });
 
   it('mantém estado entre etapas', async () => {
-    render(<Index />);
+    render(
+      <AuthProvider>
+        <Index />
+      </AuthProvider>
+    );
 
     // Step 1: Seleciona problemas
     await waitFor(() => {
       expect(screen.getByText('ESCUTAR')).toBeInTheDocument();
     });
 
-    const accordionItem = screen.getByText('Agenda Desorganizada');
+    const accordionItem = screen.getByText('1. Contexto Geral');
     await user.click(accordionItem);
 
     // Avança e volta
-    const nextButton = screen.getByRole('button', { name: /vamos adiante/i });
+    const nextButton = screen.getByRole('button', { name: /continuar/i });
     await user.click(nextButton);
 
     await waitFor(() => {

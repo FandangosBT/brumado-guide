@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Users, Clock, Target, CheckCircle, ArrowRight, CheckCircle2, Circle, FileText, Filter, UserCheck } from "lucide-react";
+import { Calendar, Users, Clock, Target, CheckCircle, ArrowRight, CheckCircle2, Circle, FileText, Filter, UserCheck, DollarSign } from "lucide-react";
 import { getPilots, trackPilotRecommendedSeen, trackPilotSelect, trackStepComplete, trackCtaClick } from "@/lib/sdk";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -17,145 +17,179 @@ const defaultPilotos: Array<{
   duracao?: string;
   escopo?: string[];
   metas?: string[];
+  cronograma?: { title: string; window: string }[];
   recomendado: boolean;
   posicao?: { left: string };
 }> = [
   {
-    id: "piloto-agenda",
-    titulo: "Agenda Inteligente",
-    foco: "Eliminar conflitos de agendamento",
-    icone: Calendar,
-    duracao: "30 dias",
+    id: "piloto-financeiro",
+    titulo: "Financeiro Vivo",
+    foco: "Centralizar AP/AR e visão de caixa unificada (hospedagem + eventos)",
+    icone: DollarSign as unknown as IconType,
+    duracao: "20 dias",
     escopo: [
-      "Implementação do sistema de agenda",
-      "Treinamento da equipe",
-      "Integração WhatsApp",
-      "Monitoramento de resultados"
+      "Centros de custo e DRE simplificado",
+      "Integração de receitas (OTAs/site/eventos)",
+      "Alertas de vencimento e conciliação básica"
     ],
     metas: [
-      "95% redução de conflitos",
-      "80% automação de confirmações",
-      "15 horas/mês economizadas"
+      "Fechamento D+2",
+      "Redução de inadimplência",
+      "Acurácia ≥ 99%"
+    ],
+    cronograma: [
+      { title: "Acessos & centros de custo", window: "Dias 1–3" },
+      { title: "Integração receitas/AP-AR", window: "Dias 4–10" },
+      { title: "Conciliação & alertas", window: "Dias 11–15" },
+      { title: "DRE + treinamento", window: "Dias 16–20" }
     ],
     recomendado: true,
     posicao: { left: "5%" }
   },
   {
-    id: "piloto-crm",
-    titulo: "CRM Médico",
-    foco: "Reativar pacientes inativos",
-    icone: Users,
-    duracao: "45 dias",
+    id: "piloto-agenda",
+    titulo: "Agenda Integrada",
+    foco: "Disponibilidade única e sem conflitos entre hospedagem e eventos",
+    icone: Calendar,
+    duracao: "20 dias",
     escopo: [
-      "Setup do CRM especializado",
-      "Segmentação de pacientes",
-      "Campanhas de reativação",
-      "Follow-up automatizado"
+      "Sincronização com OTAs (Booking/Airbnb)",
+      "Bloqueios por eventos e manutenção",
+      "Checagem de conflito e sugestões"
     ],
     metas: [
-      "40% reativação de inativos",
-      "25% aumento em consultas",
-      "Melhoria na satisfação"
+      "Overbooking = 0",
+      "Confiabilidade ≥ 99%",
+      "SLA confirmação < 15 min"
+    ],
+    cronograma: [
+      { title: "Sincronização OTAs", window: "Dias 1–5" },
+      { title: "Bloqueios & regras", window: "Dias 6–10" },
+      { title: "Checagem de conflitos & testes", window: "Dias 11–15" },
+      { title: "Go-live & monitoramento", window: "Dias 16–20" }
     ],
     recomendado: true,
     posicao: { left: "20%" }
   },
   {
-    id: "piloto-estoque",
-    titulo: "Controle de Estoque",
-    foco: "Eliminar perdas por vencimento",
-    icone: CheckCircle,
+    id: "piloto-crm",
+    titulo: "CRM Vivo",
+    foco: "Qualificação de leads e follow-up multi-canal",
+    icone: Users,
     duracao: "20 dias",
     escopo: [
-      "Sistema de controle básico",
-      "Alertas de vencimento",
-      "Relatórios de consumo",
-      "Otimização de compras"
+      "Pipelines por nicho (casamentos, corporativo, hospedagem)",
+      "Integração WhatsApp/E-mail",
+      "Tarefas e lembretes automáticos"
     ],
     metas: [
-      "Zero produtos vencidos",
-      "30% redução de desperdício",
-      "R$ 2.000/mês economizados"
+      "↑ taxa de resposta",
+      "↓ tempo de ciclo",
+      "↑ taxa de propostas enviadas"
     ],
-    recomendado: false,
+    cronograma: [
+      { title: "Pipelines por nicho", window: "Dias 1–5" },
+      { title: "Integração WA/E-mail", window: "Dias 6–10" },
+      { title: "Playbooks & tarefas", window: "Dias 11–15" },
+      { title: "Painéis & treinamento", window: "Dias 16–20" }
+    ],
+    recomendado: true,
     posicao: { left: "35%" }
   },
   {
-    id: "piloto-marketing",
-    titulo: "Conteúdo Digital",
-    foco: "Fortalecer presença digital",
-    icone: Target,
-    duracao: "60 dias",
+    id: "piloto-contratos",
+    titulo: "Orçamentos & Contratos Digitais",
+    foco: "Templates por nicho e assinatura eletrônica com auditoria",
+    icone: FileText,
+    duracao: "25 dias",
     escopo: [
-      "Criação de conteúdo educativo",
-      "Automatização de posts",
-      "Campanhas de engajamento",
-      "Análise de performance"
+      "Geração de orçamento (PDF/HTML)",
+      "Assinatura eletrônica (Clicksign/DocuSign)",
+      "Trilhas de auditoria (hash/IP/versão)"
     ],
     metas: [
-      "300% mais engagement",
-      "50% aumento em leads",
-      "Fortalecimento da marca"
+      "% assinados ≤ 7 dias",
+      "Redução de retrabalho",
+      "Rastreabilidade total"
+    ],
+    cronograma: [
+      { title: "Templates por nicho", window: "Dias 1–5" },
+      { title: "Geração + assinatura", window: "Dias 6–12" },
+      { title: "Auditoria & webhooks", window: "Dias 13–18" },
+      { title: "Go-live & métricas", window: "Dias 19–25" }
     ],
     recomendado: false,
     posicao: { left: "50%" }
   },
   {
-    id: "piloto-contratos",
-    titulo: "Gestão de Contratos Digitais",
-    foco: "Mitigar risco judicial",
-    icone: FileText,
-    duracao: "20 dias",
+    id: "piloto-estoque",
+    titulo: "Estoque Inteligente",
+    foco: "Evitar rupturas e desperdícios com mínimos e alertas",
+    icone: CheckCircle,
+    duracao: "35 dias",
     escopo: [
-      "Digitalização de contratos",
-      "Templates padronizados",
-      "Assinatura eletrônica",
-      "Auditoria automática"
+      "Cadastro + curva ABC",
+      "Mínimos por item e alertas",
+      "Movimentação simples"
     ],
     metas: [
-      "90% redução de riscos legais",
-      "50% economia em papel",
-      "Processamento 10x mais rápido"
+      "Zero ruptura em itens A",
+      "Alertas ≥ 48h",
+      "Giro otimizado"
+    ],
+    cronograma: [
+      { title: "Cadastro & curva ABC", window: "Dias 1–7" },
+      { title: "Mínimos & alertas", window: "Dias 8–15" },
+      { title: "Movimentação & relatórios", window: "Dias 16–25" },
+      { title: "Treinamento & otimização", window: "Dias 26–35" }
     ],
     recomendado: false,
     posicao: { left: "65%" }
   },
   {
-    id: "piloto-funil",
-    titulo: "Funil Digital",
-    foco: "Converter clientes vindos da web",
-    icone: Filter,
+    id: "piloto-paginas",
+    titulo: "Página Institucional + Landing Pages Segmentadas",
+    foco: "Captação por nicho e presença digital sólida",
+    icone: Target,
     duracao: "15 dias",
     escopo: [
-      "Landing pages otimizadas",
-      "Sistema de captação de leads",
-      "Automações de marketing",
-      "Análise de conversão"
+      "Site institucional leve",
+      "LPs por nicho (casamentos, corporativo, hospedagem)",
+      "Integração com formulários e CRM"
     ],
     metas: [
-      "200% mais conversões",
-      "Lead qualification automática",
-      "Redução de CAC em 40%"
+      "↑ tráfego orgânico",
+      "↑ leads qualificados",
+      "Base para automações"
+    ],
+    cronograma: [
+      { title: "Site institucional", window: "Dias 1–5" },
+      { title: "LPs + formulários", window: "Dias 6–10" },
+      { title: "Integração CRM & SEO", window: "Dias 11–15" }
     ],
     recomendado: false,
     posicao: { left: "80%" }
   },
   {
-    id: "piloto-portal",
-    titulo: "Área do Cliente",
-    foco: "Reduzir workload pela implementação de um portal de auto serviço",
-    icone: UserCheck,
+    id: "piloto-funil",
+    titulo: "Funil Digital",
+    foco: "Converter leads em propostas e contratos",
+    icone: Filter,
     duracao: "15 dias",
     escopo: [
-      "Portal do paciente",
-      "Agendamento online",
-      "Histórico de consultas",
-      "Sistema de tickets"
+      "Qualificação automática",
+      "Integração LP → CRM",
+      "Medição de conversão"
     ],
     metas: [
-      "60% redução no atendimento",
-      "95% satisfação do paciente",
-      "Aumento de retenção"
+      "↑ conversão LP → lead",
+      "↓ tempo de resposta",
+      "↑ propostas enviadas"
+    ],
+    cronograma: [
+      { title: "Qualificação & formulários", window: "Dias 1–5" },
+      { title: "Integração LP → CRM & automações", window: "Dias 6–10" },
+      { title: "Medição & ajustes", window: "Dias 11–15" }
     ],
     recomendado: false,
     posicao: { left: "95%" }
@@ -195,40 +229,82 @@ export const Step4Criar = ({ onNext, sessionId }: Step4CriarProps) => {
   }, []);
 
   const roadmapItems = useMemo(() => {
-    // Pequena personalização com base no piloto selecionado para reforçar autoridade
-    const focus = pilotos.find(p => p.id === selectedPiloto)?.titulo ?? "Agenda + CRM";
+    // Auxiliar para extrair tarefas do cronograma dos pilotos definidos no header
+    const getTasks = (pilotId: string, max: number = 4) => {
+      const cronograma = defaultPilotos.find((p) => p.id === pilotId)?.cronograma;
+      return (cronograma?.map((c) => c.title).slice(0, max)) ?? [];
+    };
+
     return [
       {
         title: "Kickoff & Arquitetura Leve",
-        description: "Infra mínima, acessos e templates. Conexão com software atual (API/CSV/ICS)",
+        description:
+          "Infra mínima, acessos e templates. Conexão com software atual (API/CSV/ICS)",
         status: "completed" as const,
         window: "Semanas 1-2",
         progress: 100,
-        tasks: ["Acessos e ambientes", "Templates e mensagens", "Definição de KPIs MVP"],
+        tasks: [
+          "Acessos e ambientes",
+          "Templates e mensagens",
+          "Definição de KPIs MVP",
+        ],
       },
       {
-        title: focus,
-        description: "Entrega do piloto com rotas críticas cobertas e medição de impacto",
+        title: "Financeiro Vivo",
+        description: "Centralização AP/AR, conciliação e DRE simplificado",
         status: "in-progress" as const,
-        window: "Semanas 3-4",
+        window: "Semanas 3-5",
         progress: 60,
-        tasks: ["Fluxos principais on-line", "Dashboard básico", "Treinamento da equipe"],
+        tasks: getTasks("piloto-financeiro"),
       },
       {
-        title: "Contratos Digitais",
-        description: "Templates versionados, assinatura e auditoria",
+        title: "Agenda Integrada",
+        description:
+          "Calendário único: OTAs, bloqueios por eventos e checagem de conflitos",
         status: "upcoming" as const,
-        window: "Semanas 5-8",
+        window: "Semanas 6-8",
         progress: 0,
-        tasks: ["Templates por especialidade", "Integração de assinatura", "Logs e trilhas"],
+        tasks: getTasks("piloto-agenda"),
       },
       {
-        title: "Estoque / Conteúdo",
-        description: "Alertas, curva ABC e calendário editorial automatizado",
+        title: "CRM Vivo",
+        description: "Pipelines por nicho, integrações e playbooks com tarefas",
         status: "upcoming" as const,
-        window: "Semanas 9-12",
+        window: "Semanas 9-10",
         progress: 0,
-        tasks: ["Importação CSV", "Alertas mínimos", "Pautas e agendamento"],
+        tasks: getTasks("piloto-crm"),
+      },
+      {
+        title: "Orçamentos & Contratos Digitais",
+        description: "Templates por nicho, assinatura eletrônica e auditoria",
+        status: "upcoming" as const,
+        window: "Fase 2 (90+ dias)",
+        progress: 0,
+        tasks: getTasks("piloto-contratos"),
+      },
+      {
+        title: "Estoque Inteligente",
+        description: "Cadastro/ABC, mínimos, alertas e movimentação simplificada",
+        status: "upcoming" as const,
+        window: "Fase 2 (90+ dias)",
+        progress: 0,
+        tasks: getTasks("piloto-estoque"),
+      },
+      {
+        title: "Página Institucional + Landing Pages Segmentadas",
+        description: "Presença digital sólida e captação por nicho integrada ao CRM",
+        status: "upcoming" as const,
+        window: "Fase 2 (90+ dias)",
+        progress: 0,
+        tasks: getTasks("piloto-paginas"),
+      },
+      {
+        title: "Funil Digital",
+        description: "Qualificação automática, integração LP → CRM e medição de conversão",
+        status: "upcoming" as const,
+        window: "Fase 2 (90+ dias)",
+        progress: 0,
+        tasks: getTasks("piloto-funil"),
       },
     ];
   }, [selectedPiloto, pilotos]);
@@ -355,6 +431,21 @@ export const Step4Criar = ({ onNext, sessionId }: Step4CriarProps) => {
                                 </ul>
                               </>
                             ) : null}
+
+                            {piloto.cronograma?.length ? (
+                              <>
+                                <h4 className="font-medium text-step-4 mb-2 mt-4">Plano de ação (cronograma):</h4>
+                                <ul className="space-y-1">
+                                  {piloto.cronograma.map((c, i) => (
+                                    <li key={i} className="text-xs text-muted-foreground flex items-center gap-2">
+                                      <Clock className="w-3 h-3 text-step-4" />
+                                      <span className="font-medium text-foreground">{c.window}</span>
+                                      <span>— {c.title}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </>
+                            ) : null}
                           </div>
                         ) : null}
                       </div>
@@ -406,12 +497,12 @@ export const Step4Criar = ({ onNext, sessionId }: Step4CriarProps) => {
           <div className="step-card step-4 text-center animate-slide-up">
             <h3 className="text-xl font-bold mb-4">Estratégia Recomendada</h3>
             <p className="text-muted-foreground mb-6">
-              Começar com os pilotos de <strong>Agenda</strong> e <strong>CRM</strong> oferece o maior retorno 
+              Começar com os pilotos de <strong>Financeiro Vivo</strong>, <strong>Agenda Integrada</strong> e <strong>CRM Vivo</strong> oferece o maior retorno
               sobre investimento e impacto imediato na operação.
             </p>
             <div className="flex justify-center">
               <div className="p-6 bg-step-4/10 rounded-lg">
-                <div className="text-3xl font-bold text-step-4 mb-2">75 dias</div>
+                <div className="text-3xl font-bold text-step-4 mb-2">60 dias</div>
                 <div className="text-base text-muted-foreground">Previsão de entrega</div>
               </div>
             </div>

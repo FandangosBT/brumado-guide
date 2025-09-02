@@ -6,6 +6,7 @@ import { vi } from 'vitest';
 // Mock do SDK
 vi.mock('@/lib/sdk', () => ({
   trackWidgetInteraction: vi.fn(),
+  trackCtaClick: vi.fn(),
 }));
 
 // Mock do PDF generator
@@ -26,8 +27,8 @@ describe('Step5Otimizar', () => {
     render(<Step5Otimizar onComplete={mockOnComplete} sessionId={mockSessionId} />);
 
     // Verifica se os widgets são renderizados
-    expect(screen.getByText('Ocupação da Agenda')).toBeInTheDocument();
-    expect(screen.getByText('Pacientes Reativados')).toBeInTheDocument();
+    expect(screen.getByText('Taxa de Ocupação')).toBeInTheDocument();
+    expect(screen.getByText('Hóspedes Reativados')).toBeInTheDocument();
     expect(screen.getByText('Receita Mensal')).toBeInTheDocument();
 
     // Verifica se o botão de simulação está presente
