@@ -16,7 +16,7 @@ const scannerData = {
   data: "Setembro/2025",
   consultoria: "Q7 Ops",
   contextoGeral:
-    "A Quinta de Brumado atua em duas frentes principais: hospedagem e eventos (casamentos, aniversários e corporativos), com integração entre ambas. A operação é administrada por três sócios (Felipe, Sandra e Peninha), mas sem um sistema centralizado. Hoje, a gestão é feita em Excel + WhatsApp + sistema parcial de hospedagem (OTA/Booking), o que gera dificuldade no controle financeiro consolidado, falta de integração entre hospedagem e eventos, perda de tempo na geração de orçamentos personalizados e insegurança quanto à disponibilidade (risco de overbooking). Felipe ressaltou a necessidade de um sistema próprio e flexível, que preserve a personalização do atendimento em eventos e seja capaz de integrar as operações no futuro.",
+    "A Quinta de Brumado atua em duas frentes principais: hospedagem e eventos (casamentos, aniversários e corporativos), com integração entre ambas. A operação é administrada por três pessoas, mas sem um sistema centralizado. Hoje, a gestão é feita em Excel + WhatsApp + sistema parcial de hospedagem (OTA/Booking), o que gera dificuldade no controle financeiro consolidado, falta de integração entre hospedagem e eventos, perda de tempo na geração de orçamentos personalizados e insegurança quanto à disponibilidade (risco de overbooking). Felipe ressaltou a necessidade de um sistema próprio e flexível, que preserve a personalização do atendimento em eventos e seja capaz de integrar as operações no futuro.",
   processos: {
     financeiro: [
       "Controle feito em Excel.",
